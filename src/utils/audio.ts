@@ -128,6 +128,85 @@ class AudioSynth {
       console.warn('Audio check blocked:', e);
     }
   }
+
+  private bgmIntervalId: any = null;
+  private bgmStep = 0;
+  private bgmNotes = [
+    261.63, 329.63, 392.00, 440.00, 523.25, 659.25, 523.25, 440.00,
+    349.23, 440.00, 523.25, 587.33, 698.46, 587.33, 523.25, 440.00,
+    392.00, 493.88, 587.33, 659.25, 783.99, 659.25, 587.33, 493.88,
+    349.23, 440.00, 523.25, 587.33, 698.46, 587.33, 523.25, 440.00
+  ];
+
+  startBGM() {
+    try {
+      this.init();
+      if (!this.ctx) return;
+      if (this.bgmIntervalId) return; // already active
+
+      this.bgmStep = 0;
+      const playNextWarmTone = () => {
+        if (!this.ctx) return;
+        if (this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+        
+        const now = this.ctx.currentTime;
+        
+        // Every 8 steps play a super soft low base note for nice full ambient feel
+        if (this.bgmStep % 8 === 0) {
+          const bassChords = [130.81, 146.83, 174.61, 196.00]; // C3, D3, F3, G3
+          const baseFreq = bassChords[Math.floor(this.bgmStep / 8) % bassChords.length];
+          const bassOsc = this.ctx.createOscillator();
+          const bassGain = this.ctx.createGain();
+          
+          bassOsc.type = 'triangle';
+          bassOsc.frequency.setValueAtTime(baseFreq, now);
+          
+          // Silent pad volume - 0.015 Max
+          bassGain.gain.setValueAtTime(0.012, now);
+          bassGain.gain.linearRampToValueAtTime(0.001, now + 1.1);
+          
+          bassOsc.connect(bassGain);
+          bassGain.connect(this.ctx.destination);
+          
+          bassOsc.start(now);
+          bassOsc.stop(now + 1.2);
+        }
+
+        const freq = this.bgmNotes[this.bgmStep % this.bgmNotes.length];
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now);
+        
+        // Melody chime low intensity
+        gain.gain.setValueAtTime(0.015, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+        
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        
+        osc.start(now);
+        osc.stop(now + 0.85);
+        
+        this.bgmStep++;
+      };
+
+      playNextWarmTone();
+      this.bgmIntervalId = setInterval(playNextWarmTone, 600);
+    } catch (e) {
+      console.warn('BGM blocked by user gesture:', e);
+    }
+  }
+
+  stopBGM() {
+    if (this.bgmIntervalId) {
+      clearInterval(this.bgmIntervalId);
+      this.bgmIntervalId = null;
+    }
+  }
 }
 
 export const sound = new AudioSynth();

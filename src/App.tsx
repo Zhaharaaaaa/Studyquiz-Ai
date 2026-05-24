@@ -145,6 +145,18 @@ export default function App() {
   // Audio Control
   const [soundEnabled, setSoundEnabled] = useState(true);
 
+  // Control background music depending on view and sound toggle
+  useEffect(() => {
+    if (view === 'quiz' && soundEnabled) {
+      sound.startBGM();
+    } else {
+      sound.stopBGM();
+    }
+    return () => {
+      sound.stopBGM();
+    };
+  }, [view, soundEnabled]);
+
   // User Profile State
   const [profile, setProfile] = useState<UserProfile>({
     username: 'Rizky',
