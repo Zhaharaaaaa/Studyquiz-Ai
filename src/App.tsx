@@ -277,6 +277,7 @@ export default function App() {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [hasAnswered, setHasAnswered] = useState(false);
   const [isCustomQuiz, setIsCustomQuiz] = useState(false);
+  const [selectedDifficulty, setSelectedDifficulty] = useState<'mudah' | 'sedang' | 'sulit'>('mudah');
   
   // Game progression tracking
   const [hearts, setHearts] = useState(3);
@@ -321,17 +322,24 @@ export default function App() {
   };
 
   // Launch Quiz Mode
-  const startQuiz = (customMode: boolean) => {
+  const startQuiz = (customMode: boolean, difficulty: 'mudah' | 'sedang' | 'sulit' = 'mudah') => {
     handleBtnClick();
     setIsCustomQuiz(customMode);
     
     let questionsToUse = STATIC_QUESTIONS;
-    if (customMode && summary && summary.suggestedQuestions.length > 0) {
-      questionsToUse = summary.suggestedQuestions;
+    if (customMode) {
+      if (summary && summary.suggestedQuestions.length > 0) {
+        questionsToUse = summary.suggestedQuestions;
+      }
     } else {
-      // Shuffle static questions pool and take exactly 10 questions
-      const shuffledStatic = [...STATIC_QUESTIONS].sort(() => Math.random() - 0.5);
-      questionsToUse = shuffledStatic.slice(0, 10);
+      setSelectedDifficulty(difficulty);
+      // Filter STATIC_QUESTIONS by the selected difficulty level
+      const filtered = STATIC_QUESTIONS.filter(q => q.difficulty === difficulty);
+      // Shuffle those specific 5 questions
+      const shuffledFiltered = [...filtered].sort(() => Math.random() - 0.5);
+      
+      // Safety fallback: if nothing found, fallback to slice of standard pool
+      questionsToUse = shuffledFiltered.length > 0 ? shuffledFiltered : STATIC_QUESTIONS.slice(0, 5);
     }
 
     setActiveQuestions(questionsToUse);
@@ -676,18 +684,40 @@ export default function App() {
 
               {/* Traditional IT general quiz starting portal */}
               <div className="bg-white border-2 border-gray-200 border-b-6 rounded-3xl p-5 text-center">
-                <div className="w-12 h-12 bg-green-100 rounded-2xl flex items-center justify-center text-green-600 mx-auto mb-3 border-b-3 border-green-300 font-bold">
+                <div className="w-12 h-12 bg-green-100 rounded-2xl flex items-center justify-center text-green-600 mx-auto mb-3 border-b-3 border-green-300 font-bold text-xl">
                   💻
                 </div>
                 <h4 className="font-black text-gray-800">Uji Pengetahuan IT Umum</h4>
-                <p className="text-xs text-gray-400 font-semibold mt-1">Menggunakan 5 pertanyaan standard seputar Web, Linux & Database.</p>
-                <button
-                  id="direct-static-quiz"
-                  onClick={() => startQuiz(false)}
-                  className="mt-4 w-full bg-[#4caf50] hover:brightness-105 active:translate-y-[2px] active:border-b-0 text-white font-extrabold py-2.5 rounded-2xl border-b-4 border-green-700 transition-all text-sm cursor-pointer"
-                >
-                  Main Instan ⚡
-                </button>
+                <p className="text-xs text-gray-400 font-semibold mt-1 mb-4">Pilih tingkat kesulitan untuk menguji pemahaman teknologi standar berisi 5 soal.</p>
+                
+                <div className="space-y-2.5">
+                  <button
+                    id="start-easy-quiz"
+                    onClick={() => startQuiz(false, 'mudah')}
+                    className="w-full bg-[#52c41a] hover:brightness-105 active:translate-y-[2px] active:border-b-0 text-white font-black py-2.5 rounded-2xl border-b-4 border-[#389e0d] transition-all text-xs flex items-center justify-between px-4 cursor-pointer"
+                  >
+                    <span>🟢 Tingkat Mudah</span>
+                    <span className="bg-black/15 px-2 py-0.5 rounded-lg text-[10px] uppercase font-black">Mulai</span>
+                  </button>
+
+                  <button
+                    id="start-medium-quiz"
+                    onClick={() => startQuiz(false, 'sedang')}
+                    className="w-full bg-[#fa8c16] hover:brightness-105 active:translate-y-[2px] active:border-b-0 text-white font-black py-2.5 rounded-2xl border-b-4 border-[#d46b08] transition-all text-xs flex items-center justify-between px-4 cursor-pointer"
+                  >
+                    <span>🟡 Tingkat Sedang</span>
+                    <span className="bg-black/15 px-2 py-0.5 rounded-lg text-[10px] uppercase font-black">Mulai</span>
+                  </button>
+
+                  <button
+                    id="start-hard-quiz"
+                    onClick={() => startQuiz(false, 'sulit')}
+                    className="w-full bg-[#f5222d] hover:brightness-105 active:translate-y-[2px] active:border-b-0 text-white font-black py-2.5 rounded-2xl border-b-4 border-[#cf1322] transition-all text-xs flex items-center justify-between px-4 cursor-pointer"
+                  >
+                    <span>🔴 Tingkat Sulit</span>
+                    <span className="bg-black/15 px-2 py-0.5 rounded-lg text-[10px] uppercase font-black">Mulai</span>
+                  </button>
+                </div>
               </div>
 
             </div>
@@ -1044,7 +1074,7 @@ export default function App() {
               {/* Question card */}
               <div className="bg-gradient-to-br from-blue-50 to-[#e6f7ff]/40 border-2 border-blue-100 p-6 rounded-3xl relative">
                 <span className="absolute -top-3 left-4 bg-[#1890ff] text-white text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-                  {isCustomQuiz ? "Kuis Kustom" : "Kuis IT Terstandarisasi"}
+                  {isCustomQuiz ? "Kuis Kustom" : `Ujian IT - ${selectedDifficulty.charAt(0).toUpperCase() + selectedDifficulty.slice(1)}`}
                 </span>
                 
                 <h3 className="text-lg md:text-xl font-black text-gray-800 leading-snug mt-2">
@@ -1249,7 +1279,7 @@ export default function App() {
             <div className="mt-8 space-y-3">
               <button
                 id="replay-quiz-btn"
-                onClick={() => startQuiz(isCustomQuiz)}
+                onClick={() => startQuiz(isCustomQuiz, selectedDifficulty)}
                 className="w-full bg-[#1890ff] hover:brightness-105 active:translate-y-[4px] active:border-b-c text-white font-black py-4.5 rounded-2xl border-b-6 border-[#096dd9] transition-all flex items-center justify-center gap-2 cursor-pointer text-md shadow-md"
               >
                 <RotateCcw size={18} className="stroke-[3]" />

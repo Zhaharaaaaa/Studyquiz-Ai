@@ -9,6 +9,7 @@ export interface QuizQuestion {
   options: string[];
   correctIndex: number;
   explanation?: string;
+  difficulty?: 'mudah' | 'sedang' | 'sulit';
 }
 
 export interface SummaryResult {

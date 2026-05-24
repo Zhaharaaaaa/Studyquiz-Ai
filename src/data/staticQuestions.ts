@@ -16,7 +16,8 @@ export const STATIC_QUESTIONS: QuizQuestion[] = [
       "Guido van Rossum"
     ],
     correctIndex: 1,
-    explanation: "Linus Torvalds mengembangkan kernel Linux pada tahun 1991 sebagai hobi ketika berkuliah di Universitas Helsinki."
+    explanation: "Linus Torvalds mengembangkan kernel Linux pada tahun 1991 sebagai hobi ketika berkuliah di Universitas Helsinki.",
+    difficulty: 'mudah'
   },
   {
     id: 2,
@@ -28,7 +29,8 @@ export const STATIC_QUESTIONS: QuizQuestion[] = [
       "SMTP"
     ],
     correctIndex: 2,
-    explanation: "HTTPS mengamankan komunikasi dengan enkripsi SSL/TLS agar data sensitif pengguna terlindungi dari peretasan."
+    explanation: "HTTPS mengamankan komunikasi dengan enkripsi SSL/TLS agar data sensitif pengguna terlindungi dari peretasan.",
+    difficulty: 'sedang'
   },
   {
     id: 3,
@@ -40,7 +42,8 @@ export const STATIC_QUESTIONS: QuizQuestion[] = [
       "Home Tool Markup Language"
     ],
     correctIndex: 0,
-    explanation: "HTML (Hyper Text Markup Language) adalah bahasa standard dunia untuk menyusun struktur dasar halaman web."
+    explanation: "HTML (Hyper Text Markup Language) adalah bahasa standard dunia untuk menyusun struktur dasar halaman web.",
+    difficulty: 'mudah'
   },
   {
     id: 4,
@@ -52,7 +55,8 @@ export const STATIC_QUESTIONS: QuizQuestion[] = [
       "JavaScript"
     ],
     correctIndex: 3,
-    explanation: "JavaScript memiliki engine khusus di semua browser utama modern, memungkinkannya mengontrol perilaku interaktif halaman web."
+    explanation: "JavaScript memiliki engine khusus di semua browser utama modern, memungkinkannya mengontrol perilaku interaktif halaman web.",
+    difficulty: 'mudah'
   },
   {
     id: 5,
@@ -64,7 +68,8 @@ export const STATIC_QUESTIONS: QuizQuestion[] = [
       "Oracle DB"
     ],
     correctIndex: 1,
-    explanation: "MongoDB menyimpan dokumen dalam format mirip JSON (BSON), sangat fleksibel dibandingkan database SQL tabular."
+    explanation: "MongoDB menyimpan dokumen dalam format mirip JSON (BSON), sangat fleksibel dibandingkan database SQL tabular.",
+    difficulty: 'sedang'
   },
   {
     id: 6,
@@ -76,7 +81,8 @@ export const STATIC_QUESTIONS: QuizQuestion[] = [
       "Mencegah serangan virus di memori komputer"
     ],
     correctIndex: 1,
-    explanation: "Alamat IP bertindak sebagai kartu identitas digital unik bagi setiap perangkat agar dapat berkomunikasi satu sama lain melalui internet."
+    explanation: "Alamat IP bertindak sebagai kartu identitas digital unik bagi setiap perangkat agar dapat berkomunikasi satu sama lain melalui internet.",
+    difficulty: 'sedang'
   },
   {
     id: 7,
@@ -88,7 +94,8 @@ export const STATIC_QUESTIONS: QuizQuestion[] = [
       "File Transfer Protocol"
     ],
     correctIndex: 0,
-    explanation: "Load Balancer berfungsi menyebarkan beban trafik komputasi ke beberapa server agar sistem tidak kelebihan beban dan tetap responsif."
+    explanation: "Load Balancer berfungsi menyebarkan beban trafik komputasi ke beberapa server agar sistem tidak kelebihan beban dan tetap responsif.",
+    difficulty: 'sulit'
   },
   {
     id: 8,
@@ -100,7 +107,8 @@ export const STATIC_QUESTIONS: QuizQuestion[] = [
       "DaaS (Database as a Service)"
     ],
     correctIndex: 2,
-    explanation: "IaaS (Infrastructure as a Service) menyediakan resource komputasi mentah seperti virtual machine, server, jaringan, dan storage."
+    explanation: "IaaS (Infrastructure as a Service) menyediakan resource komputasi mentah seperti virtual machine, server, jaringan, dan storage.",
+    difficulty: 'sulit'
   },
   {
     id: 9,
@@ -112,7 +120,8 @@ export const STATIC_QUESTIONS: QuizQuestion[] = [
       "Git"
     ],
     correctIndex: 3,
-    explanation: "Git diciptakan oleh Linus Torvalds untuk kolaborasi penulisan source code dan melacak riwayat perubahan file secara efisien."
+    explanation: "Git diciptakan oleh Linus Torvalds untuk kolaborasi penulisan source code dan melacak riwayat perubahan file secara efisien.",
+    difficulty: 'sulit'
   },
   {
     id: 10,
@@ -124,7 +133,8 @@ export const STATIC_QUESTIONS: QuizQuestion[] = [
       "Desain website yang memiliki warna kontras tinggi khusus malam hari"
     ],
     correctIndex: 1,
-    explanation: "Responsive web design memastikan tampilan website tetap rapi, proporsional, dan mudah dibaca baik di layar HP, tablet, maupun monitor PC desktop."
+    explanation: "Responsive web design memastikan tampilan website tetap rapi, proporsional, dan mudah dibaca baik di layar HP, tablet, maupun monitor PC desktop.",
+    difficulty: 'sedang'
   },
   {
     id: 11,
@@ -136,7 +146,8 @@ export const STATIC_QUESTIONS: QuizQuestion[] = [
       "Material UI"
     ],
     correctIndex: 1,
-    explanation: "Tailwind CSS menggunakan kelas utilitas yang sangat hemat waktu untuk merancang visual modern langsung pada file HTML/JSX."
+    explanation: "Tailwind CSS menggunakan kelas utilitas yang sangat hemat waktu untuk merancang visual modern langsung pada file HTML/JSX.",
+    difficulty: 'sedang'
   },
   {
     id: 12,
@@ -148,7 +159,8 @@ export const STATIC_QUESTIONS: QuizQuestion[] = [
       "Port 3000"
     ],
     correctIndex: 2,
-    explanation: "Protokol HTTP biasa menggunakan Port 80, sedangkan protokol aman HTTPS menggunakan default Port 443."
+    explanation: "Protokol HTTP biasa menggunakan Port 80, sedangkan protokol aman HTTPS menggunakan default Port 443.",
+    difficulty: 'sulit'
   },
   {
     id: 13,
@@ -160,7 +172,8 @@ export const STATIC_QUESTIONS: QuizQuestion[] = [
       "CPU (Central Processing Unit)"
     ],
     correctIndex: 3,
-    explanation: "CPU bertugas mengeksekusi instruksi program, melakukan operasi aritmatika, logika, dan mengontrol komponen lainnya."
+    explanation: "CPU bertugas mengeksekusi instruksi program, melakukan operasi aritmatika, logika, dan mengontrol komponen lainnya.",
+    difficulty: 'mudah'
   },
   {
     id: 14,
@@ -172,7 +185,8 @@ export const STATIC_QUESTIONS: QuizQuestion[] = [
       "Abstraction (Abstraksi)"
     ],
     correctIndex: 1,
-    explanation: "Encapsulation (enkapsulasi) menyembunyikan detail internal objek dan membatasi akses langsung dari luar demi keamanan struktur kode."
+    explanation: "Encapsulation (enkapsulasi) menyembunyikan detail internal objek dan membatasi akses langsung dari luar demi keamanan struktur kode.",
+    difficulty: 'sulit'
   },
   {
     id: 15,
@@ -184,6 +198,7 @@ export const STATIC_QUESTIONS: QuizQuestion[] = [
       "RAM (Random Access Memory)"
     ],
     correctIndex: 3,
-    explanation: "RAM bertindak sebagai tempat penyimpanan jangka pendek super cepat untuk membantu sistem operasi dan software yang sedang aktif."
+    explanation: "RAM bertindak sebagai tempat penyimpanan jangka pendek super cepat untuk membantu sistem operasi dan software yang sedang aktif.",
+    difficulty: 'mudah'
   }
 ];
