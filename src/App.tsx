@@ -440,25 +440,33 @@ export default function App() {
             {/* Friendly Mascot SVG styled dynamically */}
             <div className="inline-block relative animate-bounce-subtle duration-1000 mb-4 transition-transform hover:scale-105 cursor-pointer">
               <svg className="w-28 h-28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                {/* Owl body */}
-                <ellipse cx="50" cy="55" rx="36" ry="38" fill="#1890ff" stroke="#096dd9" strokeWidth="6"/>
-                <ellipse cx="50" cy="58" rx="28" ry="30" fill="#e6f7ff"/>
-                {/* Feathery wings */}
-                <path d="M12 40 C6 50 6 70 14 74" stroke="#096dd9" strokeWidth="6" strokeLinecap="round"/>
-                <path d="M88 40 C94 50 94 70 86 74" stroke="#096dd9" strokeWidth="6" strokeLinecap="round"/>
+                {/* Fox Ears */}
+                <polygon points="22,35 12,12 38,26" fill="#1890ff" stroke="#096dd9" strokeWidth="5" strokeLinejoin="round"/>
+                <polygon points="78,35 88,12 62,26" fill="#1890ff" stroke="#096dd9" strokeWidth="5" strokeLinejoin="round"/>
+                <polygon points="24,32 17,17 34,26" fill="#e6f7ff"/>
+                <polygon points="76,32 83,17 66,26" fill="#e6f7ff"/>
+                
+                {/* Fox Head Base */}
+                <path d="M18,48 C18,28 82,28 82,48 C82,68 50,82 50,82 C50,82 18,68 18,48 Z" fill="#1890ff" stroke="#096dd9" strokeWidth="5" strokeLinejoin="round"/>
+                
+                {/* White Cheeks */}
+                <path d="M22,54 C26,72 50,78 50,78 C50,78 74,72 78,54 C66,62 50,60 50,60 C50,60 34,62 22,54 Z" fill="#ffffff" stroke="#096dd9" strokeWidth="2"/>
+                
+                {/* Cute nose */}
+                <ellipse cx="50" cy="64" rx="6" ry="4" fill="#3c3c3c"/>
+                
                 {/* Playful big eyes */}
-                <circle cx="36" cy="42" r="14" fill="white" stroke="#096dd9" strokeWidth="4"/>
-                <circle cx="64" cy="42" r="14" fill="white" stroke="#096dd9" strokeWidth="4"/>
-                <circle cx="36" cy="42" r="5" fill="#3c3c3c"/>
-                <circle cx="64" cy="42" r="5" fill="#3c3c3c"/>
-                <circle cx="38" cy="40" r="2" fill="white"/>
-                <circle cx="66" cy="40" r="2" fill="white"/>
-                {/* Orange beak */}
-                <polygon points="50,48 44,56 56,56" fill="#ff7a45" stroke="#d4380d" strokeWidth="3" strokeLinejoin="round"/>
+                <circle cx="36" cy="45" r="11" fill="white" stroke="#096dd9" strokeWidth="3"/>
+                <circle cx="64" cy="45" r="11" fill="white" stroke="#096dd9" strokeWidth="3"/>
+                <circle cx="36" cy="45" r="4" fill="#3c3c3c"/>
+                <circle cx="64" cy="45" r="4" fill="#3c3c3c"/>
+                <circle cx="38" cy="43" r="1.5" fill="white"/>
+                <circle cx="66" cy="43" r="1.5" fill="white"/>
+                
                 {/* Academic cap */}
-                <polygon points="50,12 82,24 50,36 18,24" fill="#3c3c3c" stroke="#1f1f1f" strokeWidth="3"/>
-                <rect x="47" y="24" width="6" height="12" fill="#3c3c3c"/>
-                <path d="M80 24 L84 40 L80 42 L78 24 Z" fill="#ffec3d"/>
+                <polygon points="50,14 80,24 50,34 20,24" fill="#3c3c3c" stroke="#1f1f1f" strokeWidth="3"/>
+                <rect x="47" y="24" width="6" height="10" fill="#3c3c3c"/>
+                <path d="M78 24 L82 38 L80 40 L76 24 Z" fill="#ffec3d"/>
               </svg>
               <div className="absolute -top-3 -right-6 bg-[#ffec3d] text-xs font-bold text-yellow-800 px-2.5 py-1 rounded-full border-2 border-yellow-600 uppercase tracking-widest shadow-sm">
                 Baru!
@@ -577,8 +585,36 @@ export default function App() {
                   setMaterialText('');
                 }}
               >
-                <div className="w-10 h-10 bg-[#1890ff] rounded-xl flex items-center justify-center border-b-3 border-[#096dd9] text-white font-black text-xl group-hover:scale-105 transition-transform">
-                  S
+                <div className="w-10 h-10 flex items-center justify-center group-hover:scale-110 transition-transform duration-200 select-none">
+                  <svg className="w-10 h-10" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    {/* Fox Ears */}
+                    <polygon points="22,35 12,12 38,26" fill="#1890ff" stroke="#096dd9" strokeWidth="5" strokeLinejoin="round"/>
+                    <polygon points="78,35 88,12 62,26" fill="#1890ff" stroke="#096dd9" strokeWidth="5" strokeLinejoin="round"/>
+                    <polygon points="24,32 17,17 34,26" fill="#e6f7ff"/>
+                    <polygon points="76,32 83,17 66,26" fill="#e6f7ff"/>
+                    
+                    {/* Fox Head Base */}
+                    <path d="M18,48 C18,28 82,28 82,48 C82,68 50,82 50,82 C50,82 18,68 18,48 Z" fill="#1890ff" stroke="#096dd9" strokeWidth="5" strokeLinejoin="round"/>
+                    
+                    {/* White Cheeks */}
+                    <path d="M22,54 C26,72 50,78 50,78 C50,78 74,72 78,54 C66,62 50,60 50,60 C50,60 34,62 22,54 Z" fill="#ffffff" stroke="#096dd9" strokeWidth="2"/>
+                    
+                    {/* Cute nose */}
+                    <ellipse cx="50" cy="64" rx="6" ry="4" fill="#3c3c3c"/>
+                    
+                    {/* Playful big eyes */}
+                    <circle cx="36" cy="45" r="11" fill="white" stroke="#096dd9" strokeWidth="3"/>
+                    <circle cx="64" cy="45" r="11" fill="white" stroke="#096dd9" strokeWidth="3"/>
+                    <circle cx="36" cy="45" r="4" fill="#3c3c3c"/>
+                    <circle cx="64" cy="45" r="4" fill="#3c3c3c"/>
+                    <circle cx="38" cy="43" r="1.5" fill="white"/>
+                    <circle cx="66" cy="43" r="1.5" fill="white"/>
+                    
+                    {/* Academic cap */}
+                    <polygon points="50,14 80,24 50,34 20,24" fill="#3c3c3c" stroke="#1f1f1f" strokeWidth="3"/>
+                    <rect x="47" y="24" width="6" height="10" fill="#3c3c3c"/>
+                    <path d="M78 24 L82 38 L80 40 L76 24 Z" fill="#ffec3d"/>
+                  </svg>
                 </div>
                 <span className="text-2xl font-black text-[#1890ff] tracking-tight">StudyQuiz</span>
               </div>
