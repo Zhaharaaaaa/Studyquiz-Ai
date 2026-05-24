@@ -519,10 +519,25 @@ export default function App() {
             </div>
           </div>
 
-          {/* Quick Footer */}
-          <div className="mt-8 text-center text-gray-400 text-sm font-bold flex items-center gap-1.5 bg-gray-100 px-4 py-2 rounded-2xl border border-gray-200">
-            <GraduationCap size={16} /> Made with Love in Duolingo Interface Style
-          </div>
+          {/* Professional Login Footer */}
+          <footer className="mt-12 w-full max-w-lg border-t border-gray-200/60 pt-6 text-center text-xs text-gray-400 select-none">
+            <div className="flex justify-center flex-wrap gap-4 mb-3 text-gray-500 font-semibold">
+              <span className="hover:text-[#1890ff] cursor-pointer transition-colors flex items-center gap-1">
+                <GraduationCap size={14} /> Tentang Platform
+              </span>
+              <span>•</span>
+              <span className="hover:text-[#1890ff] cursor-pointer transition-colors flex items-center gap-1">
+                <HelpCircle size={14} /> Pusat Bantuan
+              </span>
+              <span>•</span>
+              <span className="hover:text-[#1890ff] cursor-pointer transition-colors flex items-center gap-1">
+                <Lock size={14} /> Privasi Keamanan
+              </span>
+            </div>
+            <p className="font-medium text-gray-400/80 leading-relaxed max-w-sm mx-auto">
+              © 2026 StudyQuiz. Memberdayakan Proses Belajar Mandiri yang Efektif dan Terukur.
+            </p>
+          </footer>
         </div>
       )}
 
@@ -933,6 +948,34 @@ export default function App() {
 
             </div>
           </div>
+
+          {/* Professional Dashboard Footer */}
+          <footer className="w-full bg-white border-t border-gray-200/85 py-6 mt-auto">
+            <div className="max-w-5xl mx-auto px-4 md:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-400 select-none">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 bg-[#1890ff] rounded-md flex items-center justify-center border-b-2 border-[#096dd9] text-white font-black text-xs">
+                  S
+                </div>
+                <p className="font-bold text-gray-500">
+                  StudyQuiz © 2026. <span className="font-medium text-gray-400">Semua Hak Cipta Dilindungi.</span>
+                </p>
+              </div>
+
+              <div className="flex items-center flex-wrap justify-center gap-x-5 gap-y-2 font-semibold text-gray-500/90">
+                <span className="hover:text-[#1890ff] cursor-pointer transition-colors flex items-center gap-1">
+                  <GraduationCap size={13} /> Metode Belajar
+                </span>
+                <span className="text-gray-200">|</span>
+                <span className="hover:text-[#1890ff] cursor-pointer transition-colors flex items-center gap-1">
+                  <HelpCircle size={13} /> FAQ Petunjuk
+                </span>
+                <span className="text-gray-200">|</span>
+                <span className="hover:text-[#1890ff] cursor-pointer transition-colors flex items-center gap-1">
+                  <Lock size={13} /> Ketentuan Layanan
+                </span>
+              </div>
+            </div>
+          </footer>
         </div>
       )}
 
