@@ -1,0 +1,6 @@
+{
+  "name": "StudyQuiz",
+  "description": "A playful, Duolingo-inspired learning application featuring interactive text summarization and gamified quizzes with 3D elements.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

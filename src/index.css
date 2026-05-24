@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Nunito", system-ui, sans-serif;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #f7f9fa;
+  color: #3c3c3c;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom Duolingo transitions and styles */
+.duo-shadow-blue {
+  box-shadow: 0 4px 0 #1890ff;
+}
+.duo-shadow-blue:active {
+  box-shadow: 0 1px 0 #1890ff;
+}
+
+.duo-shadow-green {
+  box-shadow: 0 4px 0 #43a047;
+}
+.duo-shadow-green:active {
+  box-shadow: 0 1px 0 #43a047;
+}
+
+.duo-shadow-orange {
+  box-shadow: 0 4px 0 #e67e22;
+}
+.duo-shadow-orange:active {
+  box-shadow: 0 1px 0 #e67e22;
+}
+
+.duo-shadow-red {
+  box-shadow: 0 4px 0 #c0392b;
+}
+
+.duo-shadow-gray {
+  box-shadow: 0 4px 0 #afafaf;
+}
+
+@keyframes bounce-subtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.animate-bounce-subtle {
+  animation: bounce-subtle 2s infinite ease-in-out;
+}
+
