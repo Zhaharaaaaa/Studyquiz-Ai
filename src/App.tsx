@@ -574,7 +574,7 @@ export default function App() {
         <div id="view-dashboard" className="flex-1 flex flex-col">
           {/* NAV BAR */}
           <nav className="bg-white border-b-2 border-gray-200 sticky top-0 z-40 px-4 md:px-8 py-3.5 shadow-sm">
-            <div className="max-w-6xl mx-auto flex items-center justify-between">
+            <div className="max-w-7xl mx-auto flex items-center justify-between">
               
               {/* Brand Logo */}
               <div 
@@ -658,7 +658,7 @@ export default function App() {
           </nav>
 
           {/* MAIN CONTAINER */}
-          <div className="max-w-5xl mx-auto w-full px-4 md:px-8 py-8 flex-1 grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className="max-w-7xl mx-auto w-full px-4 md:px-8 py-8 flex-1 grid grid-cols-1 lg:grid-cols-12 gap-8">
             
             {/* LEFT PROFILE & HISTORY STATS (BENTO CARD style) */}
             <div className="lg:col-span-4 space-y-6">
@@ -1029,7 +1029,7 @@ export default function App() {
 
           {/* Professional Dashboard Footer */}
           <footer className="w-full bg-white border-t border-gray-200/85 py-6 mt-auto">
-            <div className="max-w-5xl mx-auto px-4 md:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-400 select-none">
+            <div className="max-w-7xl mx-auto px-4 md:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-400 select-none">
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 bg-[#1890ff] rounded-md flex items-center justify-center border-b-2 border-[#096dd9] text-white font-black text-xs">
                   S
