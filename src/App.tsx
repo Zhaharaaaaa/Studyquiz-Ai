@@ -138,9 +138,133 @@ const MATERIAL_EXAMPLES = [
   }
 ];
 
+export const AVATAR_LIST = [
+  { id: 'owl-cute', name: 'Guru Quizo 🦉', color: 'bg-indigo-100 border-indigo-400 text-indigo-700' },
+  { id: 'fox', name: 'StudyFox 🦊', color: 'bg-blue-100 border-blue-400 text-blue-600' },
+  { id: 'panda', name: 'Panda Cerdas 🐼', color: 'bg-gray-100 border-gray-400 text-gray-800' },
+  { id: 'cat', name: 'Kucing Jenius 🐱', color: 'bg-orange-100 border-orange-400 text-orange-600' },
+  { id: 'koala', name: 'Koala Pelajar 🐨', color: 'bg-slate-100 border-slate-400 text-slate-700' },
+  { id: 'rabbit', name: 'Kelinci Cepat 🐰', color: 'bg-pink-100 border-pink-400 text-pink-600' },
+];
+
+export function renderAvatarSVG(id: string, className = "w-full h-full") {
+  switch (id) {
+    case 'fox':
+      return (
+        <svg className={className} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Ears */}
+          <polygon points="22,35 12,12 38,26" fill="#1890ff" stroke="#096dd9" strokeWidth="5" strokeLinejoin="round"/>
+          <polygon points="78,35 88,12 62,26" fill="#1890ff" stroke="#096dd9" strokeWidth="5" strokeLinejoin="round"/>
+          <polygon points="24,32 17,17 34,26" fill="#e6f7ff"/>
+          <polygon points="76,32 83,17 66,26" fill="#e6f7ff"/>
+          {/* Fox Head Base */}
+          <path d="M18,48 C18,28 82,28 82,48 C82,68 50,82 50,82 C50,82 18,68 18,48 Z" fill="#1890ff" stroke="#096dd9" strokeWidth="5" strokeLinejoin="round"/>
+          {/* White Cheeks */}
+          <path d="M22,54 C26,72 50,78 50,78 C50,78 74,72 78,54 C66,62 50,60 50,60 C50,60 34,62 22,54 Z" fill="#ffffff" stroke="#096dd9" strokeWidth="2.5"/>
+          {/* Cute nose */}
+          <ellipse cx="50" cy="64" rx="6" ry="4" fill="#3c3c3c"/>
+          {/* Playful big eyes */}
+          <circle cx="36" cy="45" r="11" fill="white" stroke="#096dd9" strokeWidth="3"/>
+          <circle cx="64" cy="45" r="11" fill="white" stroke="#096dd9" strokeWidth="3"/>
+          <circle cx="36" cy="45" r="4" fill="#3c3c3c"/>
+          <circle cx="64" cy="45" r="4" fill="#3c3c3c"/>
+        </svg>
+      );
+    case 'panda':
+      return (
+        <svg className={className} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="24" cy="24" r="16" fill="#262626" stroke="#1f1f1f" strokeWidth="2"/>
+          <circle cx="76" cy="24" r="16" fill="#262626" stroke="#1f1f1f" strokeWidth="2"/>
+          <circle cx="50" cy="54" r="38" fill="white" stroke="#bfbfbf" strokeWidth="4"/>
+          <ellipse cx="35" cy="48" rx="11" ry="14" fill="#262626" transform="rotate(-15 35 48)"/>
+          <ellipse cx="65" cy="48" rx="11" ry="14" fill="#262626" transform="rotate(15 65 48)"/>
+          <circle cx="35" cy="48" r="4" fill="white"/>
+          <circle cx="65" cy="48" r="4" fill="white"/>
+          <circle cx="36" cy="47" r="1.5" fill="#3c3c3c"/>
+          <circle cx="66" cy="47" r="1.5" fill="#3c3c3c"/>
+          <ellipse cx="50" cy="63" rx="6" ry="3.5" fill="#262626"/>
+          <ellipse cx="22" cy="62" rx="5" ry="3.5" fill="#ffadd2" opacity="0.75"/>
+          <ellipse cx="78" cy="62" rx="5" ry="3.5" fill="#ffadd2" opacity="0.75"/>
+        </svg>
+      );
+    case 'cat':
+      return (
+        <svg className={className} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="20,30 10,6 36,22" fill="#ff7a45" stroke="#d4380d" strokeWidth="4" strokeLinejoin="round"/>
+          <polygon points="80,30 90,6 64,22" fill="#ff7a45" stroke="#d4380d" strokeWidth="4" strokeLinejoin="round"/>
+          <polygon points="24,24 16,11 31,19" fill="#ffadd2"/>
+          <polygon points="76,24 84,11 69,19" fill="#ffadd2"/>
+          <circle cx="50" cy="50" r="36" fill="#ffa940" stroke="#d4380d" strokeWidth="4"/>
+          <circle cx="35" cy="44" r="10" fill="white" stroke="#d4380d" strokeWidth="2"/>
+          <circle cx="65" cy="44" r="10" fill="white" stroke="#d4380d" strokeWidth="2"/>
+          <circle cx="35" cy="44" r="4.5" fill="#1f1f1f"/>
+          <circle cx="65" cy="44" r="4.5" fill="#1f1f1f"/>
+          <polygon points="50,54 44,59 56,59" fill="#f5222d"/>
+          <line x1="24" y1="58" x2="8" y2="56" stroke="#d4380d" strokeWidth="2.5" strokeLinecap="round"/>
+          <line x1="24" y1="64" x2="6" y2="65" stroke="#d4380d" strokeWidth="2.5" strokeLinecap="round"/>
+          <line x1="76" y1="58" x2="92" y2="56" stroke="#d4380d" strokeWidth="2.5" strokeLinecap="round"/>
+          <line x1="76" y1="64" x2="94" y2="65" stroke="#d4380d" strokeWidth="2.5" strokeLinecap="round"/>
+        </svg>
+      );
+    case 'koala':
+      return (
+        <svg className={className} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="22" cy="38" r="18" fill="#bfbfbf" stroke="#8c8c8c" strokeWidth="4"/>
+          <circle cx="78" cy="38" r="18" fill="#bfbfbf" stroke="#8c8c8c" strokeWidth="4"/>
+          <circle cx="22" cy="38" r="11" fill="#ffbecb"/>
+          <circle cx="78" cy="38" r="11" fill="#ffbecb"/>
+          <circle cx="50" cy="54" r="34" fill="#d9d9d9" stroke="#8c8c8c" strokeWidth="4"/>
+          <circle cx="36" cy="48" r="5" fill="#262626"/>
+          <circle cx="64" cy="48" r="5" fill="#262626"/>
+          <circle cx="37" cy="46" r="1.5" fill="white"/>
+          <circle cx="65" cy="46" r="1.5" fill="white"/>
+          <rect x="44" y="52" width="12" height="18" rx="6" fill="#595959" stroke="#262626" strokeWidth="1.5"/>
+          <ellipse cx="24" cy="62" rx="4.5" ry="3" fill="#ffadd2" opacity="0.7"/>
+          <ellipse cx="76" cy="62" rx="4.5" ry="3" fill="#ffadd2" opacity="0.7"/>
+        </svg>
+      );
+    case 'rabbit':
+      return (
+        <svg className={className} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="25" y="4" width="14" height="38" rx="7" fill="#fff0f6" stroke="#eb2f96" strokeWidth="4" strokeLinejoin="round"/>
+          <rect x="61" y="4" width="14" height="38" rx="7" fill="#fff0f6" stroke="#eb2f96" strokeWidth="4" strokeLinejoin="round"/>
+          <rect x="29" y="10" width="6" height="24" rx="3" fill="#ffadd2"/>
+          <rect x="65" y="10" width="6" height="24" rx="3" fill="#ffadd2"/>
+          <circle cx="50" cy="56" r="34" fill="white" stroke="#eb2f96" strokeWidth="4"/>
+          <circle cx="37" cy="50" r="5" fill="#eb2f96"/>
+          <circle cx="63" cy="50" r="5" fill="#eb2f96"/>
+          <circle cx="38" cy="48" r="1.5" fill="white"/>
+          <circle cx="63" cy="48" r="1.5" fill="white"/>
+          <polygon points="50,59 45,63 55,63" fill="#ff85c0"/>
+          <ellipse cx="26" cy="63" rx="5" ry="3.5" fill="#ffadd2" opacity="0.75"/>
+          <ellipse cx="74" cy="63" rx="5" ry="3.5" fill="#ffadd2" opacity="0.75"/>
+        </svg>
+      );
+    case 'owl-cute':
+    default:
+      return (
+        <svg className={className} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="50" cy="50" rx="38" ry="40" fill="#722ed1" stroke="#531dab" strokeWidth="4"/>
+          <circle cx="35" cy="40" r="14" fill="white" stroke="#531dab" strokeWidth="2"/>
+          <circle cx="65" cy="40" r="14" fill="white" stroke="#531dab" strokeWidth="2"/>
+          <circle cx="35" cy="40" r="6" fill="#3c3c3c"/>
+          <circle cx="65" cy="40" r="6" fill="#3c3c3c"/>
+          <circle cx="37" cy="38" r="2" fill="white"/>
+          <circle cx="67" cy="38" r="2" fill="white"/>
+          <polygon points="50,46 44,56 56,56" fill="#ff7a45"/>
+          <polygon points="50,10 76,18 50,26 24,18" fill="#3c3c3c" stroke="#1f1f1f" strokeWidth="2"/>
+          <path d="M74 18 L78 30 L76 32 L72 18 Z" fill="#ffec3d"/>
+        </svg>
+      );
+  }
+}
+
 export default function App() {
   // Navigation View State
   const [view, setView] = useState<'login' | 'dashboard' | 'quiz' | 'score'>('login');
+
+  // Avatar Modal State
+  const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
 
   // Audio Control
   const [soundEnabled, setSoundEnabled] = useState(true);
@@ -535,7 +659,7 @@ export default function App() {
 
           {/* Form Card */}
           <div className="bg-white border-2 border-[#e8e8e8] border-b-6 rounded-3xl p-8 max-w-md w-full shadow-lg transition-transform hover:scale-[1.01]">
-            <h2 className="text-2xl font-extrabold text-gray-800 text-center mb-6">
+            <h2 className="text-2xl font-extrabold text-gray-800 text-center mb-5">
               Mulai Petualangan Belajarmu! 🚀
             </h2>
 
@@ -556,6 +680,38 @@ export default function App() {
                   <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
                     <User size={20} />
                   </div>
+                </div>
+              </div>
+
+              {/* Interactive Avatar Picker for Login */}
+              <div>
+                <label className="block text-gray-600 font-extrabold text-sm mb-2 text-center sm:text-left">
+                  Pilih Karakter Belajar Kamu 🦊🦉🐨
+                </label>
+                <div className="grid grid-cols-6 gap-2 bg-gray-50 border border-gray-100 p-2.5 rounded-2xl">
+                  {AVATAR_LIST.map((av) => (
+                    <button
+                      key={av.id}
+                      type="button"
+                      onClick={() => {
+                        handleBtnClick();
+                        setProfile(prev => ({ ...prev, avatarSeed: av.id }));
+                      }}
+                      className={`relative p-1 rounded-2xl border-2 transition-all aspect-square flex items-center justify-center overflow-hidden hover:scale-105 active:scale-95 ${
+                        profile.avatarSeed === av.id
+                          ? 'border-[#1890ff] bg-blue-50/60 ring-2 ring-blue-300 shadow-xs scale-105 z-10'
+                          : 'border-transparent bg-white hover:border-gray-200'
+                      }`}
+                      title={av.name}
+                    >
+                      {renderAvatarSVG(av.id, "w-10 h-10")}
+                      {profile.avatarSeed === av.id && (
+                        <div className="absolute bottom-0 right-0 bg-[#1890ff] text-white rounded-full w-4 h-4 flex items-center justify-center text-[9px] font-black border border-white">
+                          ✓
+                        </div>
+                      )}
+                    </button>
+                  ))}
                 </div>
               </div>
 
@@ -691,8 +847,12 @@ export default function App() {
                     <p className="text-xs text-gray-400 font-extrabold">BELAJAR SEBAGAI</p>
                     <p className="text-sm text-gray-700 font-black truncate max-w-[120px]">{profile.username}</p>
                   </div>
-                  <div className="w-9 h-9 rounded-full bg-[#1890ff] text-white flex items-center justify-center font-bold border-2 border-white shadow-md text-sm cursor-pointer hover:brightness-110 active:scale-95 transition-all">
-                    {profile.username.substring(0, 2).toUpperCase()}
+                  <div 
+                    onClick={() => { handleBtnClick(); setIsAvatarModalOpen(true); }}
+                    className="w-10 h-10 rounded-full bg-indigo-50 border-2 border-indigo-200 shadow-md cursor-pointer hover:scale-105 active:scale-95 transition-all overflow-hidden flex items-center justify-center p-0.5"
+                    title="Ganti Avatar Lu"
+                  >
+                    {renderAvatarSVG(profile.avatarSeed, "w-8 h-8")}
                   </div>
 
                   <button 
@@ -722,12 +882,33 @@ export default function App() {
                 </div>
 
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="w-16 h-16 rounded-full bg-blue-500 border-4 border-white shadow-md flex items-center justify-center text-white font-black text-2xl select-none">
-                    {profile.username.charAt(0).toUpperCase()}
+                  <div className="relative flex-shrink-0">
+                    <div 
+                      onClick={() => { handleBtnClick(); setIsAvatarModalOpen(true); }}
+                      className="w-18 h-18 rounded-2xl bg-indigo-50 border-4 border-indigo-100 shadow-md flex items-center justify-center cursor-pointer overflow-hidden hover:scale-105 active:scale-95 transition-all p-1"
+                      title="Klik untuk mengganti Avatar"
+                    >
+                      {renderAvatarSVG(profile.avatarSeed, "w-14 h-14")}
+                    </div>
+                    <button
+                      onClick={() => { handleBtnClick(); setIsAvatarModalOpen(true); }}
+                      className="absolute -bottom-1.5 -right-1.5 bg-[#ffec3d] hover:bg-[#ffec3d]/90 text-yellow-900 w-6.5 h-6.5 rounded-full flex items-center justify-center shadow-md border-2 border-white text-[10px] font-black transition-transform hover:scale-110 active:scale-90"
+                      title="Ubah Avatar"
+                    >
+                      ✏️
+                    </button>
                   </div>
                   <div>
-                    <h3 className="font-black text-xl text-gray-800">{profile.username}</h3>
-                    <p className="text-sm font-bold text-[#1890ff]">Belajar & Menang XP</p>
+                    <h3 className="font-black text-xl text-gray-800 tracking-tight leading-none mb-1">{profile.username}</h3>
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-1">
+                      <span className="text-xs font-bold text-[#1890ff]">Belajar & Menang XP</span>
+                      <button 
+                        onClick={() => { handleBtnClick(); setIsAvatarModalOpen(true); }}
+                        className="text-[10px] text-gray-400 hover:text-[#1890ff] font-extrabold underline text-left"
+                      >
+                        (Ganti Karakter)
+                      </button>
+                    </div>
                   </div>
                 </div>
 
@@ -1355,8 +1536,8 @@ export default function App() {
 
             {/* Encouragement text from Quizo */}
             <div className="mt-6 flex items-center gap-3 bg-gray-50 p-4 rounded-2xl border border-gray-100 text-left text-xs font-bold leading-relaxed text-gray-500">
-              <div className="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center text-white font-black flex-shrink-0 text-sm select-none">
-                Q
+              <div className="w-10 h-10 rounded-xl bg-white border border-gray-100 shadow-xs flex items-center justify-center flex-shrink-0 select-none p-0.5">
+                {renderAvatarSVG(profile.avatarSeed, "w-8 h-8")}
               </div>
               <div>
                 "Bagus sekali, **{profile.username}**! Setiap kuis yang diselesaikan melatih sambungan saraf otakmu. Tingkatkan terus belajarmu!"
@@ -1389,6 +1570,81 @@ export default function App() {
           </div>
 
           <p className="mt-6 text-gray-400 font-bold text-xs select-none">StudyQuiz Hero badge unlocked! 🌟</p>
+        </div>
+      )}
+
+      {/* VIEW LAYER 5: INTERACTIVE AVATAR SELECTOR MODAL */}
+      {isAvatarModalOpen && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fade-in">
+          <div className="bg-white border-2 border-gray-200 border-b-8 rounded-3xl p-6 md:p-8 max-w-lg w-full shadow-2xl relative animate-scale-up-bounce">
+            
+            {/* Header */}
+            <div className="text-center mb-6">
+              <span className="text-4xl block mb-2">🎭</span>
+              <h2 className="text-2xl font-black text-gray-800">Pilih Avatar Karaktermu!</h2>
+              <p className="text-gray-400 font-bold text-xs mt-1">Ubah atau sesuaikan karakter belajar yang mewakili dirimu secara instan.</p>
+            </div>
+
+            {/* Avatar Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4 my-6">
+              {AVATAR_LIST.map((av) => {
+                const isSelected = profile.avatarSeed === av.id;
+                return (
+                  <button
+                    key={av.id}
+                    onClick={() => {
+                      handleBtnClick();
+                      setProfile(prev => ({ ...prev, avatarSeed: av.id }));
+                    }}
+                    className={`p-4 rounded-2xl border-2 border-b-6 transition-all flex flex-col items-center justify-center relative cursor-pointer group select-none ${
+                      isSelected
+                        ? 'border-[#1890ff] bg-blue-50/50 text-[#1890ff] shadow-sm transform scale-[1.03] md:translate-y-[-2px]'
+                        : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50/50 active:translate-y-[2px]'
+                    }`}
+                  >
+                    {/* SVG Container */}
+                    <div className="w-14 h-14 md:w-16 md:h-16 mb-2 flex items-center justify-center transform group-hover:scale-105 transition-transform duration-200">
+                      {renderAvatarSVG(av.id)}
+                    </div>
+                    
+                    {/* Label */}
+                    <span className="font-extrabold text-xs tracking-tight">{av.name}</span>
+                    
+                    {/* Active Ribbon Circle */}
+                    {isSelected && (
+                      <div className="absolute top-1.5 right-1.5 bg-[#4caf50] text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-black border border-white">
+                        ✓
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Actions Footer */}
+            <div className="flex gap-3 mt-6 border-t border-gray-100 pt-5">
+              <button
+                onClick={() => {
+                  handleBtnClick();
+                  setIsAvatarModalOpen(false);
+                }}
+                className="flex-1 bg-[#1890ff] hover:brightness-105 active:translate-y-[4px] text-white font-extrabold text-sm py-3 px-6 rounded-2xl border-b-4 border-[#096dd9] transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-md"
+              >
+                Gunakan Avatar Ini 👍
+              </button>
+              
+              <button
+                onClick={() => {
+                  handleBtnClick();
+                  setIsAvatarModalOpen(false);
+                }}
+                className="bg-gray-100 hover:bg-gray-200 active:translate-y-[2px] text-gray-500 font-bold text-sm py-3 px-5 rounded-2xl border-2 border-gray-200 border-b-4 transition-all cursor-pointer"
+              >
+                Batal
+              </button>
+            </div>
+
+          </div>
         </div>
       )}
 
