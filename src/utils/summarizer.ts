@@ -80,7 +80,7 @@ export function summarizeText(text: string): SummaryResult {
     }
   }
 
-  // Generate 2-3 Dynamic Quiz Questions based on the input text!
+  // Generate Dynamic Quiz Questions based on the input text!
   // We parsed elements that look like factual sentences containing "is/are" or "adalah/merupakan/ialah"
   const factSentences = sentences.filter(s => 
     s.toLowerCase().includes('adalah') || 
@@ -94,7 +94,7 @@ export function summarizeText(text: string): SummaryResult {
   let qId = 100; // Custom ID starting point for custom quiz
 
   if (factSentences.length > 0) {
-    factSentences.slice(0, 3).forEach((sentence, idx) => {
+    factSentences.slice(0, 4).forEach((sentence) => {
       // Find what comes before 'adalah' / 'merupakan' / 'ialah' / 'yaitu'
       const splitTerms = [' adalah ', ' merupakan ', ' ialah ', ' yaitu ', ' as '];
       let termUsed = '';
@@ -111,17 +111,9 @@ export function summarizeText(text: string): SummaryResult {
       if (parts.length >= 2 && parts[0].trim().length > 3 && parts[1].trim().length > 10) {
         const subject = parts[0].trim();
         const definition = parts[1].trim();
-
-        // Let's create a beautiful fill in the blank or interactive question!
-        // Option 1: "Apakah yang dimaksud dengan [Subject]?"
-        // Correct answer: The definition (or a shortened version of it)
-        // Let's shorten option texts if they are too long, or make the subject the question.
         
-        // Question A: "Berdasarkan materi, apakah definisi yang tepat dari: ________?" 
-        // Subject as answer
         const questionText = `Berdasarkan rangkuman materi, istilah manakah yang paling tepat untuk mendeskripsikan: "${definition.substring(0, 100)}${definition.length > 100 ? '...' : ''}"?`;
         
-        // Let's gather other random key terms or default options
         const distractors = ["Optimasi Algoritma", "Sistem Komputasi", "Manajemen Basisdata", "Metodologi Agile", "Paradigma Pemrograman", "Analisis Sistem"];
         const filteredDistractors = distractors.filter(d => d.toLowerCase() !== subject.toLowerCase());
         
@@ -133,7 +125,6 @@ export function summarizeText(text: string): SummaryResult {
         ];
 
         // Shuffle options
-        const correctIndex = 0;
         const shuffled = shuffleArray([...options]);
         const finalCorrectIndex = shuffled.indexOf(subject);
 
@@ -148,54 +139,136 @@ export function summarizeText(text: string): SummaryResult {
     });
   }
 
-  // If we couldn't produce enough dynamic questions, let's generate generic ones tailored to words found in text
-  if (suggestedQuestions.length < 2) {
-    // Check if science/technology keywords present
-    const carriesIT = trimmed.toLowerCase().match(/(web|internet|coding|komputer|program|data|sistem|aplikasi|software|hardware|network|api|server|database)/);
-    
-    if (carriesIT) {
-      suggestedQuestions.push({
-        id: qId++,
-        question: "Apakah tujuan utama dari mempelajari teknologi informasi berbasis data yang Anda baca?",
-        options: [
-          "Mengefisiensikan pemrosesan informasi secara terintegrasi",
-          "Membatasi akses komunikasi antar jaringan global",
-          "Menghapus seluruh sistem penyimpanan data fisik",
-          "Hanya sekedar tren masa kini tanpa fungsi bisnis"
-        ],
-        correctIndex: 0,
-        explanation: "Materi ini membahas pentingnya efisiensi digital, integrasi jaringan, dan pengelolaan data modern."
-      });
-    } else {
-      // Standard reading comprehensive question
-      suggestedQuestions.push({
-        id: qId++,
-        question: "Manakah pelajaran moral atau inti utama yang paling menonjol dari pembahasan teks materi tersebut?",
-        options: [
-          "Meningkatkan wawasan kognitif dan daya ingat mendalam",
-          "Meninggalkan teknologi demi cara-cara tradisional",
-          "Mengurangi waktu istirahat secara berlebihan",
-          "Mengabaikan detil-detil penjelasan yang panjang"
-        ],
-        correctIndex: 0,
-        explanation: "Belajar merangkum membantu kita menangkap detail krusial, melatih fokus, dan menghemat waktu belajar."
-      });
-    }
+  // If we still need more questions, let's generate some via the bullet points to make them ultra customized to the summary!
+  if (suggestedQuestions.length < 5) {
+    bullets.forEach((bullet) => {
+      if (suggestedQuestions.length >= 5) return;
+      
+      // Let's identify candidate words in this bullet that are informative
+      // Pick nouns or terms: Capitalized words or words longer than 5 letters.
+      const wordsInBullet = bullet.split(/\s+/).map(w => w.replace(/[^a-zA-Z0-9]/g, "")).filter(w => w.length > 5);
+      if (wordsInBullet.length > 0) {
+        // Pick the longest word as our key word to blank out
+        const sortedByLength = [...wordsInBullet].sort((a,b) => b.length - a.length);
+        const keyWord = sortedByLength[0];
+        
+        if (keyWord && keyWord.length > 3) {
+          // Check if we haven't already used this keyWord
+          const alreadyUsed = suggestedQuestions.some(q => q.options.includes(keyWord));
+          if (!alreadyUsed) {
+            // Replace the key word with a blank line '_______'
+            const escapedKeyWord = keyWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const rx = new RegExp('\\b' + escapedKeyWord + '\\b', 'i');
+            const blankedSentence = bullet.replace(rx, '_______');
+            
+            if (blankedSentence.includes('_______')) {
+              const questionText = `Lengkapi bagian rumpang (___) dari rangkuman materi berikut agar menjadi pernyataan yang benar: "${blankedSentence}"`;
+              
+              // Proportional educational distractors to fit the style of the answer
+              const generalQuizDistractors = [
+                "Struktur", "Infrastruktur", "Metode", "Implementasi", 
+                "Prinsip", "Optimalisasi", "Dokumen", "Eksperimen", 
+                "Kolaborasi", "Fungsional", "Interaksi", "Proses"
+              ];
+              const uniqueDistractors = generalQuizDistractors.filter(d => d.toLowerCase() !== keyWord.toLowerCase());
+              
+              const options = [
+                keyWord,
+                uniqueDistractors[0] || "Pilihan A",
+                uniqueDistractors[1] || "Pilihan B",
+                uniqueDistractors[2] || "Pilihan C"
+              ];
+              
+              const shuffled = shuffleArray([...options]);
+              const finalCorrectIndex = shuffled.indexOf(keyWord);
+              
+              suggestedQuestions.push({
+                id: qId++,
+                question: questionText,
+                options: shuffled,
+                correctIndex: finalCorrectIndex,
+                explanation: `Rangkuman yang lengkap berbunyi: "${bullet}"`
+              });
+            }
+          }
+        }
+      }
+    });
   }
 
-  // Give a nice final fallback question
-  suggestedQuestions.push({
-    id: qId++,
-    question: "Bagaimanakah strategi terbaik setelah Anda membaca rangkuman cerdas ini?",
-    options: [
-      "Mengabaikan materi dan langsung tidur",
-      "Mencoba kuis StudyQuiz secara berkala untuk memperkuat daya ingat",
-      "Menyalin ulang seluruh isi teks tanpa membacanya kembali",
-      "Mencari materi lain yang tidak ada hubungannya"
-    ],
-    correctIndex: 1,
-    explanation: "Menguji ingatan sesaat lewat kuis (active recall) terbukti meningkatkan retensi otak hingga 150%!"
-  });
+  // Large pool of high-quality educational comprehension fillers to ensure we hit EXACTLY 5 questions as final backup
+  const fillers: QuizQuestion[] = [
+    {
+      id: qId++,
+      question: "Apa tujuan utama dari membuat rangkuman/ringkasan materi pembelajaran?",
+      options: [
+        "Menyederhanakan informasi rumit agar lebih mudah dipahami dan diingat",
+        "Menghilangkan seluruh detail penting agar dokumen menjadi kosong",
+        "Menambah durasi membaca agar terasa lebih membosankan",
+        "Menghindari proses evaluasi pemahaman kognitif"
+      ],
+      correctIndex: 0,
+      explanation: "Merangkum memisahkan gagasan utama dari teks pelengkap, yang menyederhanakan retensi memori."
+    },
+    {
+      id: qId++,
+      question: "Kapankah waktu terbaik untuk menguji memori Anda dengan kuis cepat setelah membaca rangkuman?",
+      options: [
+        "Sesaat setelah membaca materi (active recall)",
+        "Dua bulan kemudian saat sudah melupakan semua materi",
+        "Hanya saat guru memaksa ujian di kelas",
+        "Tidak perlu kuis sama sekali karena tidak berguna"
+      ],
+      correctIndex: 0,
+      explanation: "Active recall (pemanggilan memori aktif) segera setelah belajar melipatgandakan kekuatan ingatan."
+    },
+    {
+      id: qId++,
+      question: "Bagaimanakah sikap terbaik saat Anda menjawab salah satu pertanyaan di dalam kuis ini?",
+      options: [
+        "Membaca penjelasan di bawah jawaban untuk evaluasi kesalahan",
+        "Langsung menutup website StudyQuiz dengan kesal",
+        "Menyalahkan algoritma sistem tanpa mempedulikan materi",
+        "Mengulangi asal-asalan tanpa memahami makna pertanyaan"
+      ],
+      correctIndex: 0,
+      explanation: "Setiap kesalahan di kuis adalah sarana umpan balik yang membangun fondasi pemahaman mendalam."
+    },
+    {
+      id: qId++,
+      question: "Strategi manakah yang paling direkomendasikan untuk menaklukkan materi yang panjang?",
+      options: [
+        "Memilah materi menjadi poin ringkas lalu mengujinya lewat kuis kustom",
+        "Menghafal seluruh baris kalimat kata demi kata",
+        "Membaca sekilas tanpa mempedulikan arti istilah baru",
+        "Hanya membaca tulisan di bab ringkasan paling akhir saja"
+      ],
+      correctIndex: 0,
+      explanation: "Memilah materi ke unit kecil (chunking) dikombinasikan dengan kuis kustom mengoptimalkan kognisi otak."
+    },
+    {
+      id: qId++,
+      question: "Apakah manfaat utama menggunakan platform belajar interaktif dengan efek 3D khas gamifikasi?",
+      options: [
+        "Meningkatkan motivasi dan keseruan belajar layaknya bermain game",
+        "Mengurangi fokus belajar karena terlalu banyak warna seru",
+        "Membuat materi pelajaran menjadi lebih sulit dipahami",
+        "Tidak ada manfaatnya sama sekali selain estetika"
+      ],
+      correctIndex: 0,
+      explanation: "Gamifikasi terbukti memicu hormon dopamin positif yang mendorong rasa penasaran untuk terus belajar."
+    }
+  ];
+
+  // Fill in until suggestedQuestions has exactly 5 questions!
+  for (const item of fillers) {
+    if (suggestedQuestions.length >= 5) break;
+    // Ensure we don't accidentally repeat exact questions by checking IDs
+    suggestedQuestions.push(item);
+  }
+
+  // Take exactly 5 questions
+  const finalQuestions = suggestedQuestions.slice(0, 5);
 
   return {
     title,
@@ -203,7 +276,7 @@ export function summarizeText(text: string): SummaryResult {
     complexity,
     readTime,
     bullets,
-    suggestedQuestions
+    suggestedQuestions: finalQuestions
   };
 }
 

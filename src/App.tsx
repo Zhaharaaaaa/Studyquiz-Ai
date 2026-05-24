@@ -170,6 +170,38 @@ export default function App() {
   const [fileLoading, setFileLoading] = useState(false);
   const [uploadedFileName, setUploadedFileName] = useState('');
 
+  // Run Summary Engine Simulator with animated delays for high-fidelity gamification
+  const runSummarizeLogic = (textToUse: string) => {
+    if (!textToUse.trim()) {
+      alert("Silakan tempelkan materi atau pilih template contoh di bawah!");
+      return;
+    }
+
+    setIsSummarizing(true);
+    setSummaryStatus("Membaca Materi Anda... 🧠");
+
+    const statusUpdates = [
+      { text: "Menganalisis Teks & Menghapus Filler... ⚡", delay: 400 },
+      { text: "Mengekstrak Poin Pikiran Utama... ⭐", delay: 900 },
+      { text: "Memformulasikan Pertanyaan Kuis... 🎯", delay: 1400 },
+    ];
+
+    statusUpdates.forEach((step) => {
+      setTimeout(() => {
+        setSummaryStatus(step.text);
+      }, step.delay);
+    });
+
+    setTimeout(() => {
+      const result = summarizeText(textToUse);
+      setSummary(result);
+      setIsSummarizing(false);
+      setSummaryStatus("");
+      setProfile(prev => ({ ...prev, xp: prev.xp + 15 })); // Earn 15 XP for summarizing!
+      if (soundEnabled) sound.playCorrect();
+    }, 2000);
+  };
+
   // Reader & Parser for uploaded formats (TXT, PDF, Word, PowerPoint)
   const processUploadedFile = (file: File) => {
     handleBtnClick();
@@ -186,8 +218,8 @@ export default function App() {
           const text = e.target?.result as string;
           setMaterialText(text);
           setFileLoading(false);
-          // Auto trigger summary update or provide sweet validation chime
-          if (soundEnabled) sound.playCorrect();
+          // Auto trigger summary with sweet validation
+          runSummarizeLogic(text);
         };
         reader.onerror = () => {
           alert("Gagal membaca berkas .txt!");
@@ -221,7 +253,8 @@ export default function App() {
 
         setMaterialText(simulatedText);
         setFileLoading(false);
-        if (soundEnabled) sound.playCorrect();
+        // Auto trigger summary with sweet validation
+        runSummarizeLogic(simulatedText);
       }
     }, 1200);
   };
@@ -265,34 +298,7 @@ export default function App() {
   // Run Summary Engine Simulator with animated delays for high-fidelity gamification
   const handleSummarize = () => {
     handleBtnClick();
-    if (!materialText.trim()) {
-      alert("Silakan tempelkan materi atau pilih template contoh di bawah!");
-      return;
-    }
-
-    setIsSummarizing(true);
-    setSummaryStatus("Membaca Materi Anda... 🧠");
-
-    const statusUpdates = [
-      { text: "Menganalisis Teks & Menghapus Filler... ⚡", delay: 400 },
-      { text: "Mengekstrak Poin Pikiran Utama... ⭐", delay: 900 },
-      { text: "Memformulasikan Pertanyaan Kuis... 🎯", delay: 1400 },
-    ];
-
-    statusUpdates.forEach((step) => {
-      setTimeout(() => {
-        setSummaryStatus(step.text);
-      }, step.delay);
-    });
-
-    setTimeout(() => {
-      const result = summarizeText(materialText);
-      setSummary(result);
-      setIsSummarizing(false);
-      setSummaryStatus("");
-      setProfile(prev => ({ ...prev, xp: prev.xp + 15 })); // Earn 15 XP for summarizing!
-      if (soundEnabled) sound.playCorrect();
-    }, 2000);
+    runSummarizeLogic(materialText);
   };
 
   // Fast insert template helper
@@ -310,6 +316,10 @@ export default function App() {
     let questionsToUse = STATIC_QUESTIONS;
     if (customMode && summary && summary.suggestedQuestions.length > 0) {
       questionsToUse = summary.suggestedQuestions;
+    } else {
+      // Shuffle static questions pool and take exactly 10 questions
+      const shuffledStatic = [...STATIC_QUESTIONS].sort(() => Math.random() - 0.5);
+      questionsToUse = shuffledStatic.slice(0, 10);
     }
 
     setActiveQuestions(questionsToUse);
@@ -383,8 +393,8 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#F0F2F5] text-[#3c3c3c] flex flex-col font-sans selection:bg-[#cbe3ff]">
       
-      {/* GLOBAL BANNER FOR AUDIO TOGGLE */}
-      <div className="fixed top-4 right-4 z-50">
+      {/* GLOBAL BANNER FOR AUDIO TOGGLE BAR (SUDUT KANAN BAWAH) */}
+      <div className="fixed bottom-6 right-6 z-50">
         <button 
           id="audio-toggle-btn"
           onClick={() => {
