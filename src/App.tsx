@@ -292,7 +292,6 @@ export default function App() {
 
   // Login inputs
   const [usernameInput, setUsernameInput] = useState('');
-  const [passwordInput, setPasswordInput] = useState('');
   const [loginError, setLoginError] = useState('');
 
   // Summarizer Input & Output
@@ -393,10 +392,14 @@ export default function App() {
         const result = await resp.json();
         setSummary(result);
         
-        // Reconstruct a preview in the text editor
-        const previewText = `===== DOKUMEN: ${file.name} =====\n[Poin Utama Rangkuman]\n` + 
-          result.bullets.map((b: string) => `• ${b}`).join("\n");
-        setMaterialText(previewText);
+        if (result.extractedText) {
+          setMaterialText(result.extractedText);
+        } else {
+          // Reconstruct a preview in the text editor
+          const previewText = `===== DOKUMEN: ${file.name} =====\n[Poin Utama Rangkuman]\n` + 
+            result.bullets.map((b: string) => `• ${b}`).join("\n");
+          setMaterialText(previewText);
+        }
 
         setIsSummarizing(false);
         setFileLoading(false);
@@ -580,7 +583,6 @@ export default function App() {
   const handleLogout = () => {
     handleBtnClick();
     setUsernameInput('');
-    setPasswordInput('');
     setSummary(null);
     setMaterialText('');
     setView('login');
@@ -715,24 +717,6 @@ export default function App() {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-gray-600 font-extrabold text-sm mb-2">Kunci Sandi (Password)</label>
-                <div className="relative">
-                  <input
-                    id="login-password"
-                    type="password"
-                    required
-                    placeholder="••••••••"
-                    value={passwordInput}
-                    onChange={(e) => setPasswordInput(e.target.value)}
-                    className="w-full bg-[#f5f5f5] hover:bg-[#eaeaea] focus:bg-white text-gray-800 border-2 border-transparent focus:border-[#1890ff] rounded-2xl px-5 py-4 font-bold text-lg outline-none transition-all placeholder-gray-400 focus:shadow-sm"
-                  />
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
-                    <Lock size={20} />
-                  </div>
-                </div>
-              </div>
-
               {loginError && (
                 <div className="bg-red-50 text-red-600 font-bold p-3 rounded-xl border border-red-200 text-sm flex items-center gap-2">
                   <AlertCircle size={16} /> {loginError}
@@ -751,7 +735,7 @@ export default function App() {
             </form>
 
             <div className="mt-6 text-center">
-              <span className="text-gray-400 text-sm font-semibold">Tinggal klik masuk untuk bypass langsung tanpa sandi! 😉</span>
+              <span className="text-gray-400 text-sm font-semibold">Tinggal klik tombol di atas untuk langsung mulai belajar! 😉</span>
             </div>
           </div>
 
@@ -1218,13 +1202,26 @@ export default function App() {
                   <div className="mt-6 space-y-3.5 bg-gray-50 border-2 border-gray-200/40 p-5 rounded-2xl">
                     <p className="text-xs text-gray-400 font-black tracking-widest uppercase">HASIL RANGKUMAN INTI MATERI :</p>
                     {summary.bullets.map((bullet, idx) => (
-                      <div key={idx} className="flex gap-3 items-start">
-                        <div className="w-5 h-5 bg-[#e6f7ff] text-[#1890ff] font-extrabold text-xs rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 border border-blue-200">
+                      <div key={idx} className="flex gap-4 items-start bg-white p-3.5 rounded-xl border border-gray-100 shadow-2xs hover:shadow-xs transition-shadow">
+                        <div className="w-6 h-6 bg-[#e6f7ff] text-[#1890ff] font-extrabold text-xs rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 border border-blue-200">
                           {idx + 1}
                         </div>
-                        <p className="text-sm font-bold text-gray-700 leading-relaxed">
-                          {bullet}
-                        </p>
+                        <div className="text-sm font-bold text-gray-700 leading-relaxed flex-1">
+                          {(() => {
+                            const parts = bullet.split(/(\*\*[^*]+\*\*)/g);
+                            return parts.map((part, i) => {
+                              if (part.startsWith('**') && part.endsWith('**')) {
+                                const inner = part.slice(2, -2);
+                                return (
+                                  <strong key={i} className="font-extrabold text-indigo-900 bg-indigo-50 px-1.5 py-0.5 rounded-md border border-indigo-100 shadow-3xs mx-1">
+                                    {inner}
+                                  </strong>
+                                );
+                              }
+                              return part;
+                            });
+                          })()}
+                        </div>
                       </div>
                     ))}
                   </div>

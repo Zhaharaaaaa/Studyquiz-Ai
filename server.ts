@@ -36,6 +36,31 @@ function getGeminiAI(): GoogleGenAI {
   return aiClient;
 }
 
+// Helper function to clean and organize extracted text from files
+function cleanExtractedText(raw: string): string {
+  if (!raw) return "";
+  const lines = raw
+    .replace(/\r\n/g, "\n")
+    .replace(/\r/g, "\n")
+    .split("\n")
+    .map(line => line.trim());
+  
+  const cleaned: string[] = [];
+  let emptyCount = 0;
+  for (const line of lines) {
+    if (line === "") {
+      emptyCount++;
+      if (emptyCount === 1) {
+        cleaned.push("");
+      }
+    } else {
+      emptyCount = 0;
+      cleaned.push(line);
+    }
+  }
+  return cleaned.join("\n").trim();
+}
+
 // REST API endpoint to extract text and summarize using Gemini AI
 app.post("/api/summarize", async (req, res) => {
   try {
@@ -90,7 +115,7 @@ app.post("/api/summarize", async (req, res) => {
       return res.status(400).json({ error: "Silakan masukkan teks atau unggah berkas PDF/Word/PPT/TXT." });
     }
 
-    const trimmedText = text.trim();
+    const trimmedText = cleanExtractedText(text);
     if (!trimmedText || trimmedText.length < 5) {
       return res.status(400).json({ error: "Tidak dapat mengekstrak teks yang cukup dari dokumen ini. Pastikan dokumen berisi teks tulisan asli yang bisa dibaca." });
     }
@@ -105,7 +130,7 @@ MATERI PEMBELAJARAN:
 ${trimmedText}
 `,
       config: {
-        systemInstruction: "Anda adalah asisten pendidikan pintar bernama Guru Quizo (seekor rubah bijak). Tugas Anda adalah merangkum materi secara interaktif dalam Bahasa Indonesia yang asyik, mendidik, dan mudah dipahami, serta membuat kuis interaktif berisi TEPAT 5 pertanyaan pilihan ganda terkait materi guna melatih kemampuan berpikir kritis.",
+        systemInstruction: "Anda adalah asisten pendidikan pintar bernama Guru Quizo (seekor rubah bijak). Tugas Anda adalah membuat rangkuman materi yang sangat komprehensif, mendalam, dan terstruktur dengan rapi dalam Bahasa Indonesia yang asyik, mendidik, serta membuat kuis interaktif berisi TEPAT 5 pertanyaan pilihan ganda guna melatih kemampuan kognitif dan analisis kritis siswa secara interaktif.",
         responseMimeType: "application/json",
         responseSchema: {
           type: Type.OBJECT,
@@ -121,7 +146,7 @@ ${trimmedText}
             bullets: {
               type: Type.ARRAY,
               items: { type: Type.STRING },
-              description: "Daftar 4 sampai 6 butir rangkuman gagasan atau intisari poin penting materi secara runut dalam Bahasa Indonesia.",
+              description: "Daftar 6 sampai 8 butir rangkuman materi yang sangat komprehensif, mendalam, dan informatif dalam Bahasa Indonesia. Setiap butir HARUS berupa penjelasan padat-isi (2 hingga 4 kalimat detail yang meringkas teori, data, kegunaan, atau penjelasan ilmiah dari konsep tersebut, jangan disingkat terlalu pendek). Mulailah setiap butir dengan emoji yang relevan diikuti dengan kata kunci utama yang ditebalkan dengan format Markdown ganda, contoh: '📌 **Faktor Pemicu**: [Penjelasan mendalam]'.",
             },
             suggestedQuestions: {
               type: Type.ARRAY,
@@ -173,6 +198,7 @@ ${trimmedText}
       complexity: parsedResponse.complexity || "Sedang",
       readTime,
       bullets: parsedResponse.bullets || ["Materi telah berhasil diproses oleh AI."],
+      extractedText: trimmedText,
       suggestedQuestions: (parsedResponse.suggestedQuestions || []).map((q: any, idx: number) => ({
         id: 300 + idx,
         question: q.question,
@@ -183,7 +209,7 @@ ${trimmedText}
       })),
     };
 
-    res.json(finalResult);
+    res.json(finalResult);;
   } catch (error: any) {
     console.error("Summarization process error:", error);
     res.status(500).json({
