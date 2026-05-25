@@ -16,7 +16,8 @@ function extractPdfTextFromBuffer(buffer: Buffer): Promise<string> {
       if (err) {
         reject(err);
       } else if (!item) {
-        resolve(textResult.trim());
+        // Parsing selesai, kembalikan hasil teks utuh
+        resolve(textResult);
       } else if (item.text) {
         textResult += item.text + " ";
       }
