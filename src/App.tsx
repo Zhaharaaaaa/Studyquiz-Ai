@@ -627,37 +627,27 @@ export default function App() {
         setProfile(prev => ({ ...prev, xp: prev.xp + 25 })); // Double bonus for real Document Parsing!
         if (soundEnabled) sound.playCorrect();
       } catch (err: any) {
-        console.warn("Mulai parsing simulasi/fallback lokal karena kendala berkas:", err);
+        console.error("Gagal memproses berkas:", err);
         setIsSummarizing(false);
         setFileLoading(false);
         setSummaryStatus("");
 
-        // Elegant Local Fallback for offline usage
         const ext = file.name.split('.').pop()?.toLowerCase();
-        let fallbackText = "";
-        
         if (ext === 'txt') {
-          // If txt, we can read it directly!
+          // If txt, we can read it directly locally! This is a real reader, not simulation.
           const txtReader = new FileReader();
           txtReader.onload = (txtEvent) => {
             const rawText = txtEvent.target?.result as string;
             setMaterialText(rawText);
             runSummarizeLogic(rawText);
           };
+          txtReader.onerror = () => {
+            alert(`Gagal membaca berkas TXT lokal: ${err.message || err}`);
+          };
           txtReader.readAsText(file);
         } else {
-          // Fallback text templates based on name keywords
-          const lowerName = file.name.toLowerCase();
-          if (lowerName.includes("kimia") || lowerName.includes("reaksi") || lowerName.includes("atom")) {
-            fallbackText = "Kimia organik adalah percabangan ilmu kimia mengenai struktur, sifat, komposisi, reaksi, dan sintesis senyawa karbon. Atom karbon memiliki karakteristik khas berupa kemampuan membentuk rantai ikatan kovalen yang stabil dengan sesama karbon maupun atom lain.";
-          } else if (lowerName.includes("sejarah") || lowerName.includes("perang") || lowerName.includes("indonesia")) {
-            fallbackText = "Sejarah kemerdekaan Indonesia diawali dengan pembacaan teks Proklamasi oleh Ir. Soekarno pada tanggal 17 Agustus 1945 di Jalan Pegangsaan Timur No. 56, Jakarta.";
-          } else {
-            const cleanTitle = file.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ");
-            fallbackText = `Dokumen penting membahas materi "${cleanTitle}" yang mencakup landasan teoretis fundamental dan kerangka praktis aplikatif. Pelajari poin penting ini secara berulang untuk meraih skor maksimal.`;
-          }
-          setMaterialText(fallbackText);
-          runSummarizeLogic(fallbackText);
+          // Alert the real error from backend so user can see what went wrong
+          alert(`Gagal memilah berkas: ${err.message || err}`);
         }
       }
     };
