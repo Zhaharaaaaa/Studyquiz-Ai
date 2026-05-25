@@ -2,63 +2,6 @@ import express from "express";
 import path from "path";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI, Type } from "@google/genai";
-import mammoth from "mammoth";
-import officeParser from "officeparser";
-
-// Configure officeparser to use the writable /tmp directory to avoid write permission errors in serverless environments like Vercel
-try {
-  officeParser.setCustomConfig({
-    tempWorkDir: "/tmp"
-  });
-} catch (configErr) {
-  console.warn("Gagal mengatur konfigurasi kustom officeparser:", configErr);
-}
-
-// @ts-ignore
-import pdfParseFork from "pdf-parse-fork";
-
-// Helper promise wrapper to extract text from a PDF Buffer with pdf-parse-fork
-function extractPdfTextFromBuffer(buffer: Buffer): Promise<string> {
-  return new Promise(async (resolve, reject) => {
-    try {
-      // Resolve the parsing function robustly to support both ESM/CJS or direct require fallback
-      let parseFn: any = pdfParseFork;
-      if (typeof parseFn !== "function") {
-        if (parseFn && typeof parseFn.default === "function") {
-          parseFn = parseFn.default;
-        } else {
-          try {
-            const runtimeRequire = typeof require !== "undefined" ? require : null;
-            if (runtimeRequire) {
-              const loaded = runtimeRequire("pdf-parse-fork");
-              if (typeof loaded === "function") {
-                parseFn = loaded;
-              } else if (loaded && typeof loaded.default === "function") {
-                parseFn = loaded.default;
-              }
-            }
-          } catch (reqErr) {
-            console.error("Runtime require fallback for pdf-parse-fork failed:", reqErr);
-          }
-        }
-      }
-
-      if (typeof parseFn !== "function") {
-        throw new Error("Library pdf-parse-fork could not be loaded as a function (TypeError).");
-      }
-
-      const data = await parseFn(buffer);
-      if (data && typeof data.text === "string") {
-        resolve(data.text);
-      } else {
-        resolve("");
-      }
-    } catch (err: any) {
-      console.error("PDF parsing error in extractPdfTextFromBuffer:", err);
-      reject(err);
-    }
-  });
-}
 
 const app = express();
 const PORT = 3000;
@@ -112,75 +55,62 @@ function cleanExtractedText(raw: string): string {
   return cleaned.join("\n").trim();
 }
 
+// Helper to count words
+function wordCountFromText(input: string): number {
+  if (!input) return 0;
+  return input.split(/\s+/).filter(w => w.length > 0).length;
+}
+
 // REST API endpoint to extract text and summarize using Gemini AI
 app.post("/api/summarize", async (req, res) => {
   try {
-    let text = "";
     const { fileName, mimeType, base64Data, text: rawText } = req.body;
+    const ai = getGeminiAI();
+
+    let contentsPayload: any[] = [];
+    let isDirectText = false;
+    let trimmedText = "";
 
     if (rawText) {
-      // Use direct copy-paste text
-      text = rawText;
+      trimmedText = cleanExtractedText(rawText);
+      isDirectText = true;
     } else if (base64Data) {
-      // Parse file from base64
-      const buffer = Buffer.from(base64Data, "base64");
       const ext = fileName ? fileName.split(".").pop()?.toLowerCase() : "";
-
       if (ext === "txt" || mimeType === "text/plain") {
-        text = buffer.toString("utf-8");
-      } else if (ext === "pdf" || mimeType === "application/pdf") {
-        try {
-          text = await extractPdfTextFromBuffer(buffer);
-        } catch (pdfErr: any) {
-          console.error("PDF parsing error:", pdfErr);
-          throw new Error(`Gagal mengekstrak teks dari berkas PDF: ${pdfErr.message}`);
-        }
-      } else if (ext === "docx" || ext === "doc" || mimeType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
-        try {
-          const parsed = await mammoth.extractRawText({ buffer });
-          text = parsed.value;
-        } catch (docxErr: any) {
-          console.error("DOCX parsing error:", docxErr);
-          throw new Error(`Gagal mengekstrak teks dari berkas Word: ${docxErr.message}`);
-        }
-      } else if (ext === "pptx" || ext === "ppt" || mimeType === "application/vnd.openxmlformats-officedocument.presentationml.presentation") {
-        try {
-          text = await new Promise<string>((resolve, reject) => {
-            officeParser.parseOffice(buffer, (data: any, err: any) => {
-              if (err) {
-                reject(err);
-              } else {
-                resolve(data);
-              }
-            });
-          });
-        } catch (pptxErr: any) {
-          console.error("PPTX parsing error:", pptxErr);
-          throw new Error(`Gagal mengekstrak teks dari berkas PowerPoint: ${pptxErr.message || pptxErr}`);
-        }
-      } else {
-        throw new Error(`Format berkas tidak didukung (${ext || mimeType}). Gunakan berkas PDF, Word, PPT, atau TXT.`);
+        const buffer = Buffer.from(base64Data, "base64");
+        trimmedText = cleanExtractedText(buffer.toString("utf-8"));
+        isDirectText = true;
       }
+    }
+
+    if (isDirectText) {
+      contentsPayload = [
+        `Berikut adalah materi pembelajaran yang perlu dirangkum dan diujikan lewat kuis. Tolong baca dengan seksama dan buat rangkuman interaktif beserta kuis yang seru.
+
+MATERI PEMBELAJARAN:
+${trimmedText}
+`
+      ];
+    } else if (base64Data) {
+      // Send document directly using modern Gemini SDK inlineData
+      contentsPayload = [
+        {
+          inlineData: {
+            data: base64Data,
+            mimeType: mimeType || "application/pdf"
+          }
+        },
+        "Berikut adalah berkas materi pembelajaran penting yang diunggah. Tolong baca isi dokumen ini, ekstrak seluruh teks isinya secara utuh, lalu buat rangkuman komprehensif serta kuis interaktif yang seru dari materi tersebut sesuai dengan instruksi sistem di bawah ini."
+      ];
     } else {
       return res.status(400).json({ error: "Silakan masukkan teks atau unggah berkas PDF/Word/PPT/TXT." });
     }
 
-    const trimmedText = cleanExtractedText(text);
-    if (!trimmedText || trimmedText.length < 5) {
-      return res.status(400).json({ error: "Tidak dapat mengekstrak teks yang cukup dari dokumen ini. Pastikan dokumen berisi teks tulisan asli yang bisa dibaca." });
-    }
-
-    // Process using Gemini 3.5 Flash for high-quality summarization
-    const ai = getGeminiAI();
     const response = await ai.models.generateContent({
       model: "gemini-3.5-flash",
-      contents: `Berikut adalah materi pembelajaran yang perlu dirangkum dan diujikan lewat kuis. Tolong baca dengan seksama dan buat rangkuman interaktif beserta kuis yang seru.
-
-MATERI PEMBELAJARAN:
-${trimmedText}
-`,
+      contents: contentsPayload,
       config: {
-        systemInstruction: "Anda adalah asisten pendidikan pintar bernama Guru Quizo (seekor rubah bijak). Tugas Anda adalah membuat rangkuman materi yang sangat komprehensif, mendalam, dan terstruktur dengan rapi dalam Bahasa Indonesia yang asyik, mendidik, serta membuat kuis interaktif berisi TEPAT 5 pertanyaan pilihan ganda guna melatih kemampuan kognitif dan analisis kritis siswa secara interaktif.",
+        systemInstruction: "Anda adalah asisten pendidikan pintar bernama Guru Quizo (seekor rubah bijak). Tugas Anda adalah membuat rangkuman materi yang sangat komprehensif, mendalam, dan terstruktur dengan rapi dalam Bahasa Indonesia yang asyik, mendidik, serta membuat kuis interaktif berisi TEPAT 5 pertanyaan pilihan ganda guna melatih kemampuan kognitif dan analisis kritis siswa secara interaktif. Anda juga wajib melakukan ekstraksi teks isi dokumen secara lengkap ke dalam properti 'extractedText'. Jika materi berupa teks langsung, masukkan teks tersebut ke properti 'extractedText'.",
         responseMimeType: "application/json",
         responseSchema: {
           type: Type.OBJECT,
@@ -225,8 +155,16 @@ ${trimmedText}
                 required: ["question", "options", "correctIndex", "explanation"],
               },
             },
+            extractedText: {
+              type: Type.STRING,
+              description: "Teks lengkap transkrip/ekstraksi mentah dari seluruh isi materi atau seluruh isi dokumen secara lengkap, runut, dan mendalam (Bahasa Indonesia). Jangan meringkas bagian ini, melainkan lakukan transkrip isi dokumen teks aslinya secara utuh.",
+            },
+            wordCount: {
+              type: Type.INTEGER,
+              description: "Perkiraan jumlah kata dalam isi dokumen tersebut.",
+            }
           },
-          required: ["title", "complexity", "bullets", "suggestedQuestions"],
+          required: ["title", "complexity", "bullets", "suggestedQuestions", "extractedText", "wordCount"],
         },
       },
     });
@@ -237,18 +175,24 @@ ${trimmedText}
     }
 
     const parsedResponse = JSON.parse(geminiText.trim());
-    const wordCount = trimmedText.split(/\s+/).filter(w => w.length > 0).length;
-    const minutes = Math.max(1, Math.ceil(wordCount / 150));
+    
+    // Process text metrics safely
+    let finalExtractedText = parsedResponse.extractedText || trimmedText || "";
+    let finalWordCount = parsedResponse.wordCount || wordCountFromText(finalExtractedText) || 0;
+    if (finalWordCount === 0) {
+      finalWordCount = wordCountFromText(finalExtractedText);
+    }
+    const minutes = Math.max(1, Math.ceil(finalWordCount / 150));
     const readTime = `± ${minutes} menit`;
 
     // Final response integrating extracted statistics and Gemini summary
     const finalResult = {
       title: parsedResponse.title || `Topik: ${fileName || "Material Baru"}`,
-      wordCount,
+      wordCount: finalWordCount,
       complexity: parsedResponse.complexity || "Sedang",
       readTime,
       bullets: parsedResponse.bullets || ["Materi telah berhasil diproses oleh AI."],
-      extractedText: trimmedText,
+      extractedText: finalExtractedText,
       suggestedQuestions: (parsedResponse.suggestedQuestions || []).map((q: any, idx: number) => ({
         id: 300 + idx,
         question: q.question,
@@ -259,7 +203,7 @@ ${trimmedText}
       })),
     };
 
-    res.json(finalResult);;
+    res.json(finalResult);
   } catch (error: any) {
     console.error("Summarization process error:", error);
     res.status(500).json({
@@ -279,7 +223,7 @@ async function startServer() {
   } else {
     const distPath = path.join(process.cwd(), "dist");
     app.use(express.static(distPath));
-    // Express v4 wildcard routing for SPA
+    // Express v4/v5 wildcard routing for SPA
     app.get("*", (req, res) => {
       res.sendFile(path.join(distPath, "index.html"));
     });
