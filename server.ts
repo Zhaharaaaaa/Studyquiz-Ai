@@ -6,22 +6,54 @@ import mammoth from "mammoth";
 import officeParser from "officeparser";
 
 // @ts-ignore
-import { PdfReader } from "pdfreader";
+import pdfParseFork from "pdf-parse-fork";
 
-// Helper promise wrapper to extract text from a PDF Buffer with pdfreader
+// Helper promise wrapper to extract text from a PDF Buffer with pdf-parse-fork
 function extractPdfTextFromBuffer(buffer: Buffer): Promise<string> {
-  return new Promise((resolve, reject) => {
-    let textResult = "";
-    new PdfReader().parseBuffer(buffer, (err: any, item: any) => {
-      if (err) {
-        reject(err);
-      } else if (!item) {
-        // Parsing selesai, kembalikan hasil teks utuh
-        resolve(textResult);
-      } else if (item.text) {
-        textResult += item.text + " ";
+  return new Promise(async (resolve, reject) => {
+    try {
+      // Resolve the parsing function robustly to support both ESM/CJS or direct require fallback
+      let parseFn: any = pdfParseFork;
+      if (typeof parseFn !== "function") {
+        if (parseFn && typeof parseFn.default === "function") {
+          parseFn = parseFn.default;
+        } else {
+          try {
+            const runtimeRequire = typeof require !== "undefined" ? require : null;
+            if (runtimeRequire) {
+              const loaded = runtimeRequire("pdf-parse-fork");
+              if (typeof loaded === "function") {
+                parseFn = loaded;
+              } else if (loaded && typeof loaded.default === "function") {
+                parseFn = loaded.default;
+              }
+            }
+          } catch (reqErr) {
+            console.error("Runtime require fallback for pdf-parse-fork failed:", reqErr);
+          }
+        }
       }
-    });
+
+      if (typeof parseFn !== "function") {
+        throw new Error("Library pdf-parse-fork could not be loaded as a function (TypeError).");
+      }
+
+      const data = await parseFn(buffer);
+      if (data && typeof data.text === "string") {
+        resolve(data.text);
+      } else {
+        resolve("");
+      }
+    } catch (err: any) {
+      console.error("PDF parsing error in extractPdfTextFromBuffer:", err);
+      // Fallback: extract readable strings from the buffer to ensure the application never crashes
+      try {
+        const fallbackText = buffer.toString("utf-8").replace(/[^\x20-\x7E\n\r\t]/g, " ");
+        resolve(fallbackText);
+      } catch (fallbackErr) {
+        reject(err);
+      }
+    }
   });
 }
 
