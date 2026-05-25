@@ -2,12 +2,27 @@ import express from "express";
 import path from "path";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI, Type } from "@google/genai";
-import * as pdf_parse from "pdf-parse";
 import mammoth from "mammoth";
 import officeParser from "officeparser";
 
-// Resolve potential ESM/CJS default export differences
-const pdf = (pdf_parse as any).default || pdf_parse;
+// @ts-ignore
+import { PdfReader } from "pdfreader";
+
+// Helper promise wrapper to extract text from a PDF Buffer with pdfreader
+function extractPdfTextFromBuffer(buffer: Buffer): Promise<string> {
+  return new Promise((resolve, reject) => {
+    let textResult = "";
+    new PdfReader().parseBuffer(buffer, (err: any, item: any) => {
+      if (err) {
+        reject(err);
+      } else if (!item) {
+        resolve(textResult.trim());
+      } else if (item.text) {
+        textResult += item.text + " ";
+      }
+    });
+  });
+}
 
 const app = express();
 const PORT = 3000;
@@ -79,8 +94,7 @@ app.post("/api/summarize", async (req, res) => {
         text = buffer.toString("utf-8");
       } else if (ext === "pdf" || mimeType === "application/pdf") {
         try {
-          const parsed = await pdf(buffer);
-          text = parsed.text;
+          text = await extractPdfTextFromBuffer(buffer);
         } catch (pdfErr: any) {
           console.error("PDF parsing error:", pdfErr);
           throw new Error(`Gagal mengekstrak teks dari berkas PDF: ${pdfErr.message}`);

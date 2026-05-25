@@ -51,3 +51,16 @@ body {
   animation: bounce-subtle 2s infinite ease-in-out;
 }
 
+@keyframes tilt-playful {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-6deg); }
+  75% { transform: rotate(6deg); }
+}
+
+#view-login svg:hover,
+#view-login .animate-bounce-subtle:hover svg {
+  animation: tilt-playful 0.6s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+

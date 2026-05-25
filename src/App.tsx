@@ -34,6 +34,7 @@ import {
   Trash2
 } from 'lucide-react';
 import { STATIC_QUESTIONS } from './data/staticQuestions';
+import { MAJOR_QUESTIONS } from './data/majorQuestions';
 import { summarizeText } from './utils/summarizer';
 import { QuizQuestion, SummaryResult, UserProfile } from './types';
 import { sound } from './utils/audio';
@@ -146,6 +147,220 @@ export const AVATAR_LIST = [
   { id: 'koala', name: 'Koala Pelajar 🐨', color: 'bg-slate-100 border-slate-400 text-slate-700' },
   { id: 'rabbit', name: 'Kelinci Cepat 🐰', color: 'bg-pink-100 border-pink-400 text-pink-600' },
 ];
+
+export function renderMascotExpression(expression: 'cheerful' | 'thinking' | 'burning', className = "w-24 h-24 drop-shadow-md hover:scale-110 transition-transform duration-300") {
+  if (expression === 'cheerful') {
+    return (
+      <svg className={className} viewBox="0 0 100 100" fill="none">
+        {/* Soft cheerful circle background */}
+        <circle cx="50" cy="50" r="48" fill="#e6f7ff" stroke="#bae7ff" strokeWidth="2" />
+        {/* Fox ears */}
+        <polygon points="20,35 15,10 40,25" fill="#f5222d" stroke="#cf1322" strokeWidth="2" />
+        <polygon points="22,33 18,15 35,24" fill="#ff4d4f" />
+        <polygon points="80,35 85,10 60,25" fill="#f5222d" stroke="#cf1322" strokeWidth="2" />
+        <polygon points="78,33 82,15 65,24" fill="#ff4d4f" />
+        {/* Face base */}
+        <ellipse cx="50" cy="55" rx="32" ry="28" fill="#ff7a45" />
+        <path d="M 22 58 C 22 75, 78 75, 78 58 Z" fill="#fff" />
+        {/* Smiling closed eyes */}
+        <path d="M 32 46 Q 38 40 44 46" stroke="#3c3c3c" strokeWidth="3" strokeLinecap="round" fill="none" />
+        <path d="M 56 46 Q 62 40 68 46" stroke="#3c3c3c" strokeWidth="3" strokeLinecap="round" fill="none" />
+        {/* Rosy cheeks */}
+        <circle cx="28" cy="56" r="5" fill="#ff85c0" opacity="0.7" />
+        <circle cx="72" cy="56" r="5" fill="#ff85c0" opacity="0.7" />
+        {/* Cheerful mouth & nose */}
+        <polygon points="50,52 46,48 54,48" fill="#3c3c3c" />
+        <path d="M 46 54 Q 50 60 54 54" stroke="#3c3c3c" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+        {/* Smart Glasses */}
+        <rect x="25" y="40" width="22" height="12" rx="4" stroke="#ffeb3b" strokeWidth="3" fill="none" />
+        <rect x="53" y="40" width="22" height="12" rx="4" stroke="#ffeb3b" strokeWidth="3" fill="none" />
+        <line x1="47" y1="46" x2="53" y2="46" stroke="#ffeb3b" strokeWidth="3" />
+      </svg>
+    );
+  } else if (expression === 'thinking') {
+    return (
+      <svg className={className} viewBox="0 0 100 100" fill="none">
+        {/* Soft yellow thinking circle background */}
+        <circle cx="50" cy="50" r="48" fill="#feffe6" stroke="#fffb8f" strokeWidth="2" />
+        {/* Fox ears */}
+        <polygon points="20,35 18,12 38,26" fill="#f5222d" stroke="#cf1322" strokeWidth="2" />
+        <polygon points="80,35 82,12 62,26" fill="#f5222d" stroke="#cf1322" strokeWidth="2" />
+        {/* Face base */}
+        <ellipse cx="50" cy="55" rx="32" ry="28" fill="#ff7a45" />
+        <path d="M 22 58 C 22 75, 78 75, 78 58 Z" fill="#fff" />
+        {/* Thinking eyes with glasses tilted */}
+        <circle cx="37" cy="46" r="6" fill="white" stroke="#3c3c3c" strokeWidth="2" />
+        <circle cx="37" cy="46" r="2.5" fill="#3c3c3c" />
+        <circle cx="63" cy="46" r="6" fill="white" stroke="#3c3c3c" strokeWidth="2" />
+        <circle cx="63" cy="46" r="2.5" fill="#3c3c3c" />
+        {/* Nose & puzzled mouth */}
+        <polygon points="50,52 47,49 53,49" fill="#3c3c3c" />
+        <path d="M 45 58 Q 50 56 55 58" stroke="#3c3c3c" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+        {/* Thinking hand/paw over chin */}
+        <path d="M 44 68 C 42 75, 48 82, 53 78" stroke="#f5222d" strokeWidth="3.5" strokeLinecap="round" fill="none" />
+        {/* Lightbulb overhead */}
+        <path d="M 50 15 C 47 15, 45 18, 45 20 C 45 22, 47 23, 48 24 L 48 26 L 52 26 L 52 24 C 53 23, 55 22, 55 20 C 55 18, 53 15, 50 15 Z" fill="#ffec3d" />
+        <line x1="50" y1="26" x2="50" y2="28" stroke="#d46b08" strokeWidth="2" />
+      </svg>
+    );
+  } else {
+    // burning / focused / hard
+    return (
+      <svg className={className} viewBox="0 0 100 100" fill="none">
+        {/* Fiery background circle */}
+        <circle cx="50" cy="50" r="48" fill="#fff5f5" stroke="#ffa39e" strokeWidth="2" />
+        {/* Dynamic flame auras */}
+        <path d="M 25 22 Q 35 -5 45 15" stroke="#f5222d" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+        <path d="M 75 22 Q 65 -5 55 15" stroke="#f5222d" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+        {/* Fox ears flared back */}
+        <polygon points="20,38 10,20 36,28" fill="#cf1322" stroke="#a00" strokeWidth="2" />
+        <polygon points="80,38 90,20 64,28" fill="#cf1322" stroke="#a00" strokeWidth="2" />
+        {/* Face base */}
+        <ellipse cx="50" cy="55" rx="32" ry="28" fill="#ff4d4f" />
+        <path d="M 22 58 C 22 75, 78 75, 78 58 Z" fill="#ffe58f" />
+        {/* Focused determined eyes with angry eyebrows */}
+        <path d="M 28 38 L 42 42" stroke="#3c3c3c" strokeWidth="3.5" strokeLinecap="round" />
+        <path d="M 72 38 L 58 42" stroke="#3c3c3c" strokeWidth="3.5" strokeLinecap="round" />
+        <circle cx="35" cy="48" r="5" fill="white" stroke="#3c3c3c" strokeWidth="1.5" />
+        <circle cx="35" cy="48" r="2.5" fill="#cf1322" />
+        <circle cx="65" cy="48" r="5" fill="white" stroke="#3c3c3c" strokeWidth="1.5" />
+        <circle cx="65" cy="48" r="2.5" fill="#cf1322" />
+        {/* Flame headband */}
+        <rect x="24" y="52" width="52" height="5" fill="#3c3c3c" rx="1" />
+        <polygon points="50,47 47,52 53,52" fill="#ff7a45" />
+        {/* Confident, ready smile */}
+        <path d="M 44 60 Q 50 64 56 60" stroke="#3c3c3c" strokeWidth="3" strokeLinecap="round" fill="none" />
+        {/* Lightning sparkle decals */}
+        <path d="M 85 45 L 80 50 L 83 50 L 78 55" stroke="#ffeb3b" strokeWidth="2" fill="none" />
+        <path d="M 15 45 L 20 50 L 17 50 L 22 55" stroke="#ffeb3b" strokeWidth="2" fill="none" />
+      </svg>
+    );
+  }
+}
+
+export function renderMajorMascot(major: 'sistem_informasi' | 'teknik_informatika' | 'bisnis_digital', className = "w-24 h-24 drop-shadow-md hover:scale-105 transition-transform duration-300 mx-auto") {
+  if (major === 'sistem_informasi') {
+    return (
+      <svg className={className} viewBox="0 0 100 100" fill="none">
+        {/* Soft Indigo background */}
+        <circle cx="50" cy="50" r="48" fill="#f0f5ff" stroke="#adc6ff" strokeWidth="2" />
+        
+        {/* Fox ears */}
+        <polygon points="20,32 12,8 38,22" fill="#f5222d" stroke="#cf1322" strokeWidth="1.5" />
+        <polygon points="22,30 16,13 33,22" fill="#ff4d4f" />
+        <polygon points="80,32 88,8 62,22" fill="#f5222d" stroke="#cf1322" strokeWidth="1.5" />
+        <polygon points="78,30 84,13 67,22" fill="#ff4d4f" />
+        
+        {/* Face Base */}
+        <ellipse cx="50" cy="52" rx="30" ry="26" fill="#ff7a45" />
+        <path d="M 23 55 C 23 72, 77 72, 77 55 Z" fill="#fff" />
+        
+        {/* Glasses (Analytical) */}
+        <rect x="26" y="38" width="20" height="12" rx="3" stroke="#1890ff" strokeWidth="2.5" fill="none" />
+        <rect x="54" y="38" width="20" height="12" rx="3" stroke="#1890ff" strokeWidth="2.5" fill="none" />
+        <line x1="46" y1="44" x2="54" y2="44" stroke="#1890ff" strokeWidth="2.5" />
+        
+        {/* Eyes (Smart look) */}
+        <circle cx="36" cy="44" r="2.5" fill="#3c3c3c" />
+        <circle cx="64" cy="44" r="2.5" fill="#3c3c3c" />
+        
+        {/* Nose & Cute Smile */}
+        <polygon points="50,51 47,48 53,48" fill="#3c3c3c" />
+        <path d="M 46 56 Q 50 60 54 56" stroke="#3c3c3c" strokeWidth="2" strokeLinecap="round" fill="none" />
+        
+        {/* Mini Analytics Bar Chart in corner */}
+        <rect x="74" y="44" width="4" height="14" fill="#52c41a" rx="1" />
+        <rect x="80" y="38" width="4" height="20" fill="#1890ff" rx="1" />
+        <rect x="86" y="48" width="4" height="10" fill="#fa8c16" rx="1" />
+        
+        {/* Magnifying glass/wand being held */}
+        <circle cx="20" cy="54" r="5" stroke="#722ed1" strokeWidth="2" fill="white" />
+        <line x1="23.5" y1="57.5" x2="28" y2="62" stroke="#722ed1" strokeWidth="2.5" strokeLinecap="round" />
+      </svg>
+    );
+  } else if (major === 'teknik_informatika') {
+    return (
+      <svg className={className} viewBox="0 0 100 100" fill="none">
+        {/* Cyber green/black neon background */}
+        <circle cx="50" cy="50" r="48" fill="#e6ffed" stroke="#b7eb8f" strokeWidth="2" />
+        
+        {/* Fox ears */}
+        <polygon points="20,32 12,8 38,22" fill="#f5222d" stroke="#cf1322" strokeWidth="1.5" />
+        <polygon points="22,30 16,13 33,22" fill="#ff4d4f" />
+        <polygon points="80,32 88,8 62,22" fill="#f5222d" stroke="#cf1322" strokeWidth="1.5" />
+        <polygon points="78,30 84,13 67,22" fill="#ff4d4f" />
+        
+        {/* Face Base */}
+        <ellipse cx="50" cy="52" rx="30" ry="26" fill="#ff7a45" />
+        <path d="M 23 55 C 23 72, 77 72, 77 55 Z" fill="#fff" />
+        
+        {/* Programmer Nerd Glasses (Black & Thick) */}
+        <rect x="25" y="38" width="21" height="13" rx="2" stroke="#1f1f1f" strokeWidth="3" fill="none" />
+        <rect x="54" y="38" width="21" height="13" rx="2" stroke="#1f1f1f" strokeWidth="3" fill="none" />
+        <line x1="46" y1="44" x2="54" y2="44" stroke="#1f1f1f" strokeWidth="3" />
+        
+        {/* Eyes (Determined coding) */}
+        <path d="M 32 44 Q 35.5 41 39 44" stroke="#52c41a" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+        <path d="M 61 44 Q 64.5 41 68 44" stroke="#52c41a" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+        
+        {/* Binary code indicators (0 and 1 around the mascot) */}
+        <text x="76" y="36" fill="#52c41a" fontSize="9" fontWeight="bold" fontFamily="monospace">1</text>
+        <text x="14" y="44" fill="#52c41a" fontSize="9" fontWeight="bold" fontFamily="monospace">0</text>
+        <text x="72" y="66" fill="#52c41a" fontSize="8" fontWeight="bold" fontFamily="monospace">{"{"}</text>
+        <text x="82" y="66" fill="#52c41a" fontSize="8" fontWeight="bold" fontFamily="monospace">{"}"}</text>
+        
+        {/* Nose & Mouth */}
+        <polygon points="50,51 47,48 53,48" fill="#3c3c3c" />
+        <path d="M 45 57 Q 50 61 55 57" stroke="#3c3c3c" strokeWidth="2" strokeLinecap="round" fill="none" />
+        
+        {/* Cool cyber headset/headphones */}
+        <rect x="18" y="42" width="6" height="16" rx="2" fill="#2f54eb" />
+        <rect x="76" y="42" width="6" height="16" rx="2" fill="#2f54eb" />
+        <path d="M 21 42 Q 50 20 79 42" stroke="#2f54eb" strokeWidth="3" strokeLinecap="round" fill="none" />
+      </svg>
+    );
+  } else {
+    // bisnis_digital
+    return (
+      <svg className={className} viewBox="0 0 100 100" fill="none">
+        {/* High energy yellow/gold startup background */}
+        <circle cx="50" cy="50" r="48" fill="#fffbe6" stroke="#ffe58f" strokeWidth="2" />
+        
+        {/* Fox ears */}
+        <polygon points="20,32 12,8 38,22" fill="#f5222d" stroke="#cf1322" strokeWidth="1.5" />
+        <polygon points="22,30 16,13 33,22" fill="#ff4d4f" />
+        <polygon points="80,32 88,8 62,22" fill="#f5222d" stroke="#cf1322" strokeWidth="1.5" />
+        <polygon points="78,30 84,13 67,22" fill="#ff4d4f" />
+        
+        {/* Face Base */}
+        <ellipse cx="50" cy="52" rx="30" ry="26" fill="#ff7a45" />
+        <path d="M 23 55 C 23 72, 77 72, 77 55 Z" fill="#fff" />
+        
+        {/* Eyes (Excited/Winking eyes or sparkling stars) */}
+        {/* Left eye star */}
+        <polygon points="36,40 37,43 40,44 37,45 36,48 35,45 32,44 35,43" fill="#fa8c16" />
+        {/* Right eye open winking */}
+        <path d="M 58 45 Q 63 40 68 45" stroke="#3c3c3c" strokeWidth="3" strokeLinecap="round" fill="none" />
+        
+        {/* Nose & wide happy excited mouth */}
+        <polygon points="50,51 47,48 53,48" fill="#3c3c3c" />
+        <path d="M 44 56 Q 50 64 56 56 Z" fill="#f5222d" stroke="#3c3c3c" strokeWidth="1.5" />
+        
+        {/* Exponential growth curve graph under mascot */}
+        <path d="M 16 65 Q 40 62 50 50 T 84 32" stroke="#ff4d4f" strokeWidth="3" strokeLinecap="round" fill="none" />
+        {/* Arrowhead */}
+        <polygon points="84,32 78,35 82,39" fill="#ff4d4f" />
+        
+        {/* Flying gold coins */}
+        <circle cx="18" cy="30" r="4.5" fill="#ffd666" stroke="#d48806" strokeWidth="1" />
+        <text x="16.5" y="32" fill="#d48806" fontSize="5" fontWeight="black">$</text>
+        
+        <circle cx="82" cy="54" r="5" fill="#ffd666" stroke="#d48806" strokeWidth="1" />
+        <text x="80" y="56" fill="#d48806" fontSize="5.5" fontWeight="black">$</text>
+      </svg>
+    );
+  }
+}
 
 export function renderAvatarSVG(id: string, className = "w-full h-full") {
   switch (id) {
@@ -261,7 +476,12 @@ export function renderAvatarSVG(id: string, className = "w-full h-full") {
 
 export default function App() {
   // Navigation View State
-  const [view, setView] = useState<'login' | 'dashboard' | 'quiz' | 'score'>('login');
+  const [view, setView] = useState<'login' | 'dashboard' | 'quiz' | 'score' | 'quiz-setup'>('login');
+
+  // Academic major quiz state variables
+  const [selectedMajor, setSelectedMajor] = useState<'sistem_informasi' | 'teknik_informatika' | 'bisnis_digital' | null>(null);
+  const [playedMajor, setPlayedMajor] = useState<'sistem_informasi' | 'teknik_informatika' | 'bisnis_digital' | null>(null);
+  const [quizSetupStep, setQuizSetupStep] = useState<'major' | 'difficulty'>('major');
 
   // Avatar Modal State
   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
@@ -501,17 +721,28 @@ export default function App() {
   };
 
   // Launch Quiz Mode
-  const startQuiz = (customMode: boolean, difficulty: 'mudah' | 'sedang' | 'sulit' = 'mudah') => {
+  const startQuiz = (
+    customMode: boolean, 
+    difficulty: 'mudah' | 'sedang' | 'sulit' = 'mudah',
+    major: 'sistem_informasi' | 'teknik_informatika' | 'bisnis_digital' | null = null
+  ) => {
     handleBtnClick();
     setIsCustomQuiz(customMode);
+    setSelectedDifficulty(difficulty);
+    setPlayedMajor(major);
     
     let questionsToUse = STATIC_QUESTIONS;
     if (customMode) {
       if (summary && summary.suggestedQuestions.length > 0) {
         questionsToUse = summary.suggestedQuestions;
       }
+    } else if (major) {
+      // Load from the newly created MAJOR_QUESTIONS object!
+      const pool = MAJOR_QUESTIONS[major]?.[difficulty] || [];
+      // Shuffle these tailored questions fully
+      const shuffled = [...pool].sort(() => Math.random() - 0.5);
+      questionsToUse = shuffled.length > 0 ? shuffled : STATIC_QUESTIONS.slice(0, 5);
     } else {
-      setSelectedDifficulty(difficulty);
       // Filter STATIC_QUESTIONS by the selected difficulty level
       const filtered = STATIC_QUESTIONS.filter(q => q.difficulty === difficulty);
       // Shuffle those specific 5 questions
@@ -741,6 +972,11 @@ export default function App() {
 
           {/* Professional Login Footer */}
           <footer className="mt-12 w-full max-w-lg border-t border-gray-200/60 pt-6 text-center text-xs text-gray-400 select-none">
+            <div className="flex justify-center mb-4 transform hover:scale-110 transition-transform duration-300 pointer-events-auto">
+              <div className="w-12 h-12 bg-white p-1 rounded-2xl border-2 border-gray-200 shadow-sm flex items-center justify-center">
+                {renderAvatarSVG('fox', 'w-10 h-10')}
+              </div>
+            </div>
             <div className="flex justify-center flex-wrap gap-4 mb-3 text-gray-500 font-semibold">
               <span className="hover:text-[#1890ff] cursor-pointer transition-colors flex items-center gap-1">
                 <GraduationCap size={14} /> Tentang Platform
@@ -935,42 +1171,29 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Traditional IT general quiz starting portal */}
-              <div className="bg-white border-2 border-gray-200 border-b-6 rounded-3xl p-5 text-center">
-                <div className="w-12 h-12 bg-green-100 rounded-2xl flex items-center justify-center text-green-600 mx-auto mb-3 border-b-3 border-green-300 font-bold text-xl">
-                  💻
+              {/* Academic major quiz starting portal (Enhanced & Enormously more prominent - now clean white background) */}
+              <div className="bg-white border-4 border-indigo-100 border-b-8 rounded-3xl p-6 md:p-8 text-center shadow-lg transition-all relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-28 h-28 bg-indigo-50/40 rounded-full -mr-10 -mt-10 -z-10"></div>
+                <div className="w-16 h-16 bg-gradient-to-br from-[#1890ff] to-indigo-600 text-white rounded-2xl flex items-center justify-center mx-auto mb-4 border-b-4 border-indigo-850 shadow-md font-black text-3xl animate-bounce">
+                  🎓
                 </div>
-                <h4 className="font-black text-gray-800">Uji Pengetahuan IT Umum</h4>
-                <p className="text-xs text-gray-400 font-semibold mt-1 mb-4">Pilih tingkat kesulitan untuk menguji pemahaman teknologi standar berisi 5 soal.</p>
+                <h4 className="text-xl md:text-2xl font-black text-indigo-900 tracking-tight">Uji Pengetahuan Akademik</h4>
+                <p className="text-xs md:text-sm text-gray-600 font-extrabold mt-2 mb-6 leading-relaxed">
+                  Uji pemahaman kurikulum Anda di program studi <span className="text-indigo-600 font-black">Sistem Informasi</span>, <span className="text-emerald-600 font-black">Teknik Informatika</span>, atau <span className="text-amber-600 font-black">Bisnis Digital</span> untuk mengasah pemikiran kritis!
+                </p>
                 
-                <div className="space-y-2.5">
-                  <button
-                    id="start-easy-quiz"
-                    onClick={() => startQuiz(false, 'mudah')}
-                    className="w-full bg-[#52c41a] hover:brightness-105 active:translate-y-[2px] active:border-b-0 text-white font-black py-2.5 rounded-2xl border-b-4 border-[#389e0d] transition-all text-xs flex items-center justify-between px-4 cursor-pointer"
-                  >
-                    <span>🟢 Tingkat Mudah</span>
-                    <span className="bg-black/15 px-2 py-0.5 rounded-lg text-[10px] uppercase font-black">Mulai</span>
-                  </button>
-
-                  <button
-                    id="start-medium-quiz"
-                    onClick={() => startQuiz(false, 'sedang')}
-                    className="w-full bg-[#fa8c16] hover:brightness-105 active:translate-y-[2px] active:border-b-0 text-white font-black py-2.5 rounded-2xl border-b-4 border-[#d46b08] transition-all text-xs flex items-center justify-between px-4 cursor-pointer"
-                  >
-                    <span>🟡 Tingkat Sedang</span>
-                    <span className="bg-black/15 px-2 py-0.5 rounded-lg text-[10px] uppercase font-black">Mulai</span>
-                  </button>
-
-                  <button
-                    id="start-hard-quiz"
-                    onClick={() => startQuiz(false, 'sulit')}
-                    className="w-full bg-[#f5222d] hover:brightness-105 active:translate-y-[2px] active:border-b-0 text-white font-black py-2.5 rounded-2xl border-b-4 border-[#cf1322] transition-all text-xs flex items-center justify-between px-4 cursor-pointer"
-                  >
-                    <span>🔴 Tingkat Sulit</span>
-                    <span className="bg-black/15 px-2 py-0.5 rounded-lg text-[10px] uppercase font-black">Mulai</span>
-                  </button>
-                </div>
+                <button
+                  id="go-major-quiz-btn"
+                  onClick={() => {
+                    handleBtnClick();
+                    setSelectedMajor(null);
+                    setQuizSetupStep('major');
+                    setView('quiz-setup');
+                  }}
+                  className="w-full bg-[#1890ff] hover:bg-[#40a9ff] hover:scale-[1.02] active:scale-[0.98] active:translate-y-[4px] text-white font-black py-4 px-6 rounded-2xl border-b-6 border-[#096dd9] transition-all text-sm md:text-base flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <span>Mulai Uji Sekarang &rarr;</span>
+                </button>
               </div>
 
             </div>
@@ -1260,9 +1483,9 @@ export default function App() {
           {/* Professional Dashboard Footer */}
           <footer className="w-full bg-white border-t border-gray-200/85 py-6 mt-auto">
             <div className="max-w-7xl mx-auto px-4 md:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-400 select-none">
-              <div className="flex items-center gap-2">
-                <div className="w-6 h-6 bg-[#1890ff] rounded-md flex items-center justify-center border-b-2 border-[#096dd9] text-white font-black text-xs">
-                  S
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 bg-white rounded-xl flex items-center justify-center border-2 border-gray-200 p-0.5 shadow-sm hover:scale-110 transition-transform duration-300">
+                  {renderAvatarSVG('fox', 'w-full h-full')}
                 </div>
                 <p className="font-bold text-gray-500">
                   StudyQuiz © 2026. <span className="font-medium text-gray-400">Semua Hak Cipta Dilindungi.</span>
@@ -1284,6 +1507,248 @@ export default function App() {
               </div>
             </div>
           </footer>
+        </div>
+      )}
+
+      {/* VIEW LAYER: HALAMAN QUIZ SETUP */}
+      {view === 'quiz-setup' && (
+        <div id="view-quiz-setup" className="flex-1 max-w-7xl mx-auto w-full px-4 py-8 flex flex-col items-center justify-center">
+          <div className="bg-white border-2 border-gray-200 border-b-6 rounded-3xl p-6 md:p-8 w-full shadow-2xl relative overflow-hidden">
+            
+            {/* Soft decorative background illustration circles */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-50/40 rounded-full -mr-16 -mt-16 -z-10 opacity-60"></div>
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-blue-50/40 rounded-full -ml-12 -mb-12 -z-10 opacity-60"></div>
+
+            {/* HEADER METADATA */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-6 border-b border-gray-100">
+              <button
+                id="setup-back-btn"
+                onClick={() => {
+                  handleBtnClick();
+                  setView('dashboard');
+                }}
+                className="text-xs font-black text-gray-500 hover:text-red-500 py-2 px-4 rounded-xl hover:bg-gray-50 border border-gray-200 transition-all cursor-pointer self-start sm:self-auto flex items-center gap-1.5"
+              >
+                ← Kembali ke Dashboard
+              </button>
+              
+              <div className="flex items-center gap-2 bg-indigo-50 px-3 py-1.5 rounded-full border border-indigo-100 text-[#1890ff] font-extrabold text-xs">
+                <span>📚 Modul Kuis Akademik</span>
+              </div>
+            </div>
+
+            {/* STEP 1: SELECT MAJOR */}
+            {quizSetupStep === 'major' && (
+              <div className="space-y-6">
+                <div className="text-center">
+                  <h2 className="text-3xl font-black text-gray-800 tracking-tight flex items-center justify-center gap-2">
+                    🎓 Pilih Program Studi Utama
+                  </h2>
+                  <p className="text-gray-500 font-bold text-sm mt-1 max-w-lg mx-auto">
+                    Kuis dirancang khusus mengikuti target kurikulum dan rincian keilmuan tiap program studi.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pt-6">
+                  
+                  {/* Sistem Informasi */}
+                  <div
+                    id="major-card-si"
+                    onClick={() => {
+                      handleBtnClick();
+                      setSelectedMajor('sistem_informasi');
+                      setQuizSetupStep('difficulty');
+                    }}
+                    className="bg-white border-2 border-gray-200 hover:border-indigo-400 border-b-6 hover:border-b-6 active:translate-y-[2px] active:border-b-2 rounded-3xl p-8 md:p-10 min-h-[460px] transition-all cursor-pointer hover:shadow-lg flex flex-col justify-between group relative overflow-hidden"
+                  >
+                    <div className="absolute -right-8 -top-8 w-24 h-24 bg-indigo-50 rounded-full group-hover:scale-110 transition-transform duration-300 -z-0 opacity-40"></div>
+                    <div className="relative z-10 w-full">
+                      <div className="mb-6 flex justify-center transform group-hover:scale-110 transition-transform duration-300">
+                        {renderMajorMascot('sistem_informasi', "w-28 h-28 md:w-36 md:h-36 drop-shadow-md mx-auto")}
+                      </div>
+                      <h3 className="text-xl font-black text-indigo-900 text-center mt-2">Sistem Informasi</h3>
+                      <p className="text-gray-500 text-xs font-semibold mt-2 leading-relaxed text-center">
+                        Mempelajari penyelarasan strategis antara teknologi, proses bisnis, pemodelan data, tata kelola TI, dan pengambilan keputusan analitis.
+                      </p>
+                    </div>
+                    <div className="mt-6 pt-4 border-t border-gray-100/80 flex items-center justify-between text-indigo-700 font-black text-xs relative z-10">
+                      <span>Pilih Jurusan &rarr;</span>
+                      <span className="bg-indigo-50 px-2.5 py-1 rounded-lg text-[10px] uppercase font-black">SI</span>
+                    </div>
+                  </div>
+
+                  {/* Teknik Informatika */}
+                  <div
+                    id="major-card-tif"
+                    onClick={() => {
+                      handleBtnClick();
+                      setSelectedMajor('teknik_informatika');
+                      setQuizSetupStep('difficulty');
+                    }}
+                    className="bg-white border-2 border-gray-200 hover:border-emerald-400 border-b-6 hover:border-b-6 active:translate-y-[2px] active:border-b-2 rounded-3xl p-8 md:p-10 min-h-[460px] transition-all cursor-pointer hover:shadow-lg flex flex-col justify-between group relative overflow-hidden"
+                  >
+                    <div className="absolute -right-8 -top-8 w-24 h-24 bg-emerald-50 rounded-full group-hover:scale-110 transition-transform duration-300 -z-0 opacity-40"></div>
+                    <div className="relative z-10 w-full">
+                      <div className="mb-6 flex justify-center transform group-hover:scale-110 transition-transform duration-300">
+                        {renderMajorMascot('teknik_informatika', "w-28 h-28 md:w-36 md:h-36 drop-shadow-md mx-auto")}
+                      </div>
+                      <h3 className="text-xl font-black text-emerald-900 text-center mt-2">Teknik Informatika</h3>
+                      <p className="text-gray-500 text-xs font-semibold mt-2 leading-relaxed text-center">
+                        Mempelajari algoritma terstruktur, kompleksitas waktu, arsitektur jaringan, database berbasis dokumen, rekayasa kode, dan keamanan kriptografi.
+                      </p>
+                    </div>
+                    <div className="mt-6 pt-4 border-t border-gray-100/80 flex items-center justify-between text-emerald-700 font-black text-xs relative z-10">
+                      <span>Pilih Jurusan &rarr;</span>
+                      <span className="bg-emerald-50 px-2.5 py-1 rounded-lg text-[10px] uppercase font-black">IF</span>
+                    </div>
+                  </div>
+
+                  {/* Bisnis Digital */}
+                  <div
+                    id="major-card-bd"
+                    onClick={() => {
+                      handleBtnClick();
+                      setSelectedMajor('bisnis_digital');
+                      setQuizSetupStep('difficulty');
+                    }}
+                    className="bg-white border-2 border-gray-200 hover:border-amber-400 border-b-6 hover:border-b-6 active:translate-y-[2px] active:border-b-2 rounded-3xl p-8 md:p-10 min-h-[460px] transition-all cursor-pointer hover:shadow-lg flex flex-col justify-between group relative overflow-hidden"
+                  >
+                    <div className="absolute -right-8 -top-8 w-24 h-24 bg-amber-50 rounded-full group-hover:scale-110 transition-transform duration-300 -z-0 opacity-40"></div>
+                    <div className="relative z-10 w-full">
+                      <div className="mb-6 flex justify-center transform group-hover:scale-110 transition-transform duration-300">
+                        {renderMajorMascot('bisnis_digital', "w-28 h-28 md:w-36 md:h-36 drop-shadow-md mx-auto")}
+                      </div>
+                      <h3 className="text-xl font-black text-amber-900 text-center mt-2">Bisnis Digital</h3>
+                      <p className="text-gray-500 text-xs font-semibold mt-2 leading-relaxed text-center">
+                        Mempelajari model monetisasi, metrik krusial CAC & LTV, SEO organik, rasio konversi produk digital, A/B Testing, dan strategi bisnis kreatif.
+                      </p>
+                    </div>
+                    <div className="mt-6 pt-4 border-t border-gray-100/80 flex items-center justify-between text-amber-700 font-black text-xs relative z-10">
+                      <span>Pilih Jurusan &rarr;</span>
+                      <span className="bg-amber-50 px-2.5 py-1 rounded-lg text-[10px] uppercase font-black">BD</span>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            )}
+
+            {/* STEP 2: SELECT DIFFICULTY WITH EXPRESSIVE MASCOTS */}
+            {quizSetupStep === 'difficulty' && selectedMajor && (
+              <div className="space-y-6">
+                
+                {/* Back Link and selection path info */}
+                <div className="bg-gray-50 border border-gray-200/60 rounded-2xl p-4 flex items-center justify-between">
+                  <div>
+                    <span className="text-xs text-gray-400 font-black tracking-wider uppercase block">PROGRAM STUDI TERPILIH :</span>
+                    <span className="text-md font-black text-gray-800">
+                      {selectedMajor === 'sistem_informasi' && "📊 Sistem Informasi"}
+                      {selectedMajor === 'teknik_informatika' && "💻 Teknik Informatika"}
+                      {selectedMajor === 'bisnis_digital' && "🚀 Bisnis Digital"}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => {
+                      handleBtnClick();
+                      setQuizSetupStep('major');
+                    }}
+                    className="text-xs font-black text-[#1890ff] hover:underline cursor-pointer bg-white px-3 py-1.5 rounded-xl border border-gray-200"
+                  >
+                    🔄 Ganti Jurusan
+                  </button>
+                </div>
+
+                <div className="text-center">
+                  <h2 className="text-3xl font-black text-gray-800 tracking-tight flex items-center justify-center gap-2">
+                    🦊 Pilih Tingkat Kesulitan
+                  </h2>
+                  <p className="text-gray-500 font-bold text-sm mt-1 max-w-lg mx-auto">
+                    Karakter ekspresi Guru Quizo akan berubah secara reaktif sesuai dengan kekuatan soal koin pilihanmu!
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pt-6">
+                  
+                  {/* TINGKAT MUDAH */}
+                  <div
+                    id="difficulty-card-easy"
+                    onClick={() => {
+                      startQuiz(false, 'mudah', selectedMajor);
+                    }}
+                    className="bg-white border-2 border-gray-200 hover:border-green-400 border-b-6 hover:border-b-6 active:translate-y-[2px] active:border-b-2 rounded-3xl p-8 md:p-10 min-h-[460px] transition-all cursor-pointer hover:shadow-lg flex flex-col items-center justify-between text-center group"
+                  >
+                    <div className="mb-6 transform group-hover:scale-110 transition-transform duration-300">
+                      {renderMascotExpression('cheerful', "w-28 h-28 md:w-36 md:h-36 drop-shadow-md")}
+                    </div>
+                    <div>
+                      <span className="bg-green-100 text-green-700 text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider block w-24 mx-auto mb-2 border border-green-200">
+                        🟢 Mudah
+                      </span>
+                      <h3 className="text-xl font-black text-gray-800">Guru Quizo Ceria</h3>
+                      <p className="text-gray-400 text-xs font-bold mt-2 leading-relaxed px-2">
+                        Sangat santai dan asyik! Cocok bagi konsep pengenalan dasar & terminologi pemula.
+                      </p>
+                    </div>
+                    <div className="mt-6 pt-4 border-t border-gray-100 w-full text-green-600 font-black text-xs flex items-center justify-center">
+                      <span>Mulai Kuis Santai &rarr;</span>
+                    </div>
+                  </div>
+
+                  {/* TINGKAT SEDANG */}
+                  <div
+                    id="difficulty-card-medium"
+                    onClick={() => {
+                      startQuiz(false, 'sedang', selectedMajor);
+                    }}
+                    className="bg-white border-2 border-gray-200 hover:border-orange-400 border-b-6 hover:border-b-6 active:translate-y-[2px] active:border-b-2 rounded-3xl p-8 md:p-10 min-h-[460px] transition-all cursor-pointer hover:shadow-lg flex flex-col items-center justify-between text-center group"
+                  >
+                    <div className="mb-6 transform group-hover:scale-110 transition-transform duration-300">
+                      {renderMascotExpression('thinking', "w-28 h-28 md:w-36 md:h-36 drop-shadow-md")}
+                    </div>
+                    <div>
+                      <span className="bg-orange-100 text-orange-700 text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider block w-24 mx-auto mb-2 border border-orange-200">
+                        🟡 Sedang
+                      </span>
+                      <h3 className="text-xl font-black text-gray-800">Guru Quizo Berpikir</h3>
+                      <p className="text-gray-400 text-xs font-bold mt-2 leading-relaxed px-2">
+                        Mulai berpikir kritis! Menguji pemahaman teori menengah & fungsionalitas rekayasa.
+                      </p>
+                    </div>
+                    <div className="mt-6 pt-4 border-t border-gray-100 w-full text-orange-600 font-black text-xs flex items-center justify-center">
+                      <span>Mulai Kuis Serius &rarr;</span>
+                    </div>
+                  </div>
+
+                  {/* TINGKAT SULIT */}
+                  <div
+                    id="difficulty-card-hard"
+                    onClick={() => {
+                      startQuiz(false, 'sulit', selectedMajor);
+                    }}
+                    className="bg-white border-2 border-gray-200 hover:border-red-400 border-b-6 hover:border-b-6 active:translate-y-[2px] active:border-b-2 rounded-3xl p-8 md:p-10 min-h-[460px] transition-all cursor-pointer hover:shadow-lg flex flex-col items-center justify-between text-center group"
+                  >
+                    <div className="mb-6 transform group-hover:scale-110 transition-transform duration-300">
+                      {renderMascotExpression('burning', "w-28 h-28 md:w-36 md:h-36 drop-shadow-md")}
+                    </div>
+                    <div>
+                      <span className="bg-red-100 text-red-700 text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider block w-24 mx-auto mb-2 border border-red-200">
+                        🔴 Sulit
+                      </span>
+                      <h3 className="text-xl font-black text-gray-800">Quizo Mode Membara</h3>
+                      <p className="text-gray-400 text-xs font-bold mt-2 leading-relaxed px-2">
+                        Siap terbakar semangat! Menantang kedalaman implementasi tingkat lanjut & analisis mendalam.
+                      </p>
+                    </div>
+                    <div className="mt-6 pt-4 border-t border-gray-100 w-full text-red-600 font-black text-xs flex items-center justify-center">
+                      <span>Uji Batas Kemampuan &rarr;</span>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            )}
+
+          </div>
         </div>
       )}
 
@@ -1340,7 +1805,11 @@ export default function App() {
               {/* Question card */}
               <div className="bg-gradient-to-br from-blue-50 to-[#e6f7ff]/40 border-2 border-blue-100 p-6 rounded-3xl relative">
                 <span className="absolute -top-3 left-4 bg-[#1890ff] text-white text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-                  {isCustomQuiz ? "Kuis Kustom" : `Ujian IT - ${selectedDifficulty.charAt(0).toUpperCase() + selectedDifficulty.slice(1)}`}
+                  {isCustomQuiz 
+                    ? "Kuis Kustom dari Materi" 
+                    : playedMajor 
+                      ? `${playedMajor === 'sistem_informasi' ? 'Sistem Informasi' : playedMajor === 'teknik_informatika' ? 'Teknik Informatika' : 'Bisnis Digital'} - ${selectedDifficulty.toUpperCase()}`
+                      : `Ujian IT - ${selectedDifficulty.charAt(0).toUpperCase() + selectedDifficulty.slice(1)}`}
                 </span>
                 
                 <h3 className="text-lg md:text-xl font-black text-gray-800 leading-snug mt-2">
@@ -1545,7 +2014,7 @@ export default function App() {
             <div className="mt-8 space-y-3">
               <button
                 id="replay-quiz-btn"
-                onClick={() => startQuiz(isCustomQuiz, selectedDifficulty)}
+                onClick={() => startQuiz(isCustomQuiz, selectedDifficulty, playedMajor)}
                 className="w-full bg-[#1890ff] hover:brightness-105 active:translate-y-[4px] active:border-b-c text-white font-black py-4.5 rounded-2xl border-b-6 border-[#096dd9] transition-all flex items-center justify-center gap-2 cursor-pointer text-md shadow-md"
               >
                 <RotateCcw size={18} className="stroke-[3]" />
