@@ -5,6 +5,15 @@ import { GoogleGenAI, Type } from "@google/genai";
 import mammoth from "mammoth";
 import officeParser from "officeparser";
 
+// Configure officeparser to use the writable /tmp directory to avoid write permission errors in serverless environments like Vercel
+try {
+  officeParser.setCustomConfig({
+    tempWorkDir: "/tmp"
+  });
+} catch (configErr) {
+  console.warn("Gagal mengatur konfigurasi kustom officeparser:", configErr);
+}
+
 // @ts-ignore
 import pdfParseFork from "pdf-parse-fork";
 
@@ -46,13 +55,7 @@ function extractPdfTextFromBuffer(buffer: Buffer): Promise<string> {
       }
     } catch (err: any) {
       console.error("PDF parsing error in extractPdfTextFromBuffer:", err);
-      // Fallback: extract readable strings from the buffer to ensure the application never crashes
-      try {
-        const fallbackText = buffer.toString("utf-8").replace(/[^\x20-\x7E\n\r\t]/g, " ");
-        resolve(fallbackText);
-      } catch (fallbackErr) {
-        reject(err);
-      }
+      reject(err);
     }
   });
 }
