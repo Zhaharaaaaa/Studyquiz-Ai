@@ -78,7 +78,7 @@ app.post("/api/summarize", async (req, res) => {
     const { fileName, mimeType, base64Data, text: rawText } = req.body;
     const ai = getGeminiAI();
 
-    let contentsPayload: any[] = [];
+    const parts: any[] = [];
     let isDirectText = false;
     let trimmedText = "";
 
@@ -110,15 +110,15 @@ app.post("/api/summarize", async (req, res) => {
         }
       } else if (ext === "pdf" || mimeType === "application/pdf") {
         // PDF is natively supported by Gemini via inlineData. Perfect for retaining context structure!
-        contentsPayload = [
-          {
-            inlineData: {
-              data: base64Data,
-              mimeType: "application/pdf"
-            }
-          },
-          "Berikut adalah berkas PDF berisi materi pembelajaran penting yang diunggah. Tolong baca isi dokumen ini, pahami isinya dengan saksama, lalu buat rangkuman komprehensif serta kuis interaktif yang seru dari materi tersebut sesuai dengan instruksi di bawah ini."
-        ];
+        parts.push({
+          inlineData: {
+            data: base64Data,
+            mimeType: "application/pdf"
+          }
+        });
+        parts.push({
+          text: "Berikut adalah berkas PDF berisi materi pembelajaran penting yang diunggah. Tolong baca isi dokumen ini, pahami isinya dengan saksama, lalu buat rangkuman komprehensif serta kuis interaktif yang seru dari materi tersebut sesuai dengan instruksi di bawah ini."
+        });
       } else {
         throw new Error(`Format berkas tidak didukung: ${fileName || "unknown"}. Silakan unggah PDF, DOCX, PPTX atau TXT.`);
       }
@@ -128,20 +128,20 @@ app.post("/api/summarize", async (req, res) => {
       if (!trimmedText || trimmedText.length < 5) {
         throw new Error("Isi berkas kosong atau teks yang terekstraksi terlalu pendek.");
       }
-      contentsPayload = [
-        `Berikut adalah materi pembelajaran yang perlu dirangkum dan diujikan lewat kuis. Tolong baca dengan seksama dan buat rangkuman interaktif beserta kuis yang seru.
+      parts.push({
+        text: `Berikut adalah materi pembelajaran yang perlu dirangkum dan diujikan lewat kuis. Tolong baca dengan seksama dan buat rangkuman interaktif beserta kuis yang seru.
 
 MATERI PEMBELAJARAN:
 ${trimmedText}
 `
-      ];
-    } else if (contentsPayload.length === 0) {
+      });
+    } else if (parts.length === 0) {
       return res.status(400).json({ error: "Silakan masukkan teks atau unggah berkas PDF/Word/PPTX/TXT." });
     }
 
     const response = await ai.models.generateContent({
       model: "gemini-3.5-flash",
-      contents: contentsPayload,
+      contents: { parts: parts },
       config: {
         systemInstruction: "Anda adalah asisten pendidikan pintar bernama Guru Quizo (seekor rubah bijak). Tugas Anda adalah membuat rangkuman materi yang sangat komprehensif, mendalam, dan terstruktur dengan rapi dalam Bahasa Indonesia yang asyik, mendidik, serta membuat kuis interaktif berisi TEPAT 5 pertanyaan pilihan ganda guna melatih kemampuan kognitif dan analisis kritis siswa secara interaktif. Anda juga wajib melakukan ekstraksi teks isi dokumen secara lengkap ke dalam properti 'extractedText'. Jika materi berupa teks langsung, masukkan teks tersebut ke properti 'extractedText'.",
         responseMimeType: "application/json",
