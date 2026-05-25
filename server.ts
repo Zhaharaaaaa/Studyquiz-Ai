@@ -2,6 +2,17 @@ import express from "express";
 import path from "path";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI, Type } from "@google/genai";
+import mammoth from "mammoth";
+import officeParser from "officeparser";
+
+// Configure officeparser to use the writable /tmp directory to avoid write permission errors in serverless environments like Vercel
+try {
+  officeParser.setCustomConfig({
+    tempWorkDir: "/tmp"
+  });
+} catch (configErr) {
+  console.warn("Gagal mengatur konfigurasi kustom officeparser:", configErr);
+}
 
 const app = express();
 const PORT = 3000;
@@ -76,14 +87,47 @@ app.post("/api/summarize", async (req, res) => {
       isDirectText = true;
     } else if (base64Data) {
       const ext = fileName ? fileName.split(".").pop()?.toLowerCase() : "";
+      const fileBuffer = Buffer.from(base64Data, "base64");
+
       if (ext === "txt" || mimeType === "text/plain") {
-        const buffer = Buffer.from(base64Data, "base64");
-        trimmedText = cleanExtractedText(buffer.toString("utf-8"));
+        trimmedText = cleanExtractedText(fileBuffer.toString("utf-8"));
         isDirectText = true;
+      } else if (ext === "docx" || mimeType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
+        try {
+          const docResult = await mammoth.extractRawText({ buffer: fileBuffer });
+          trimmedText = cleanExtractedText(docResult.value);
+          isDirectText = true;
+        } catch (docxErr: any) {
+          throw new Error(`Gagal mengekstrak teks dari berkas Word (.docx): ${docxErr.message || docxErr}`);
+        }
+      } else if (ext === "pptx" || mimeType === "application/vnd.openxmlformats-officedocument.presentationml.presentation") {
+        try {
+          const pptText = await officeParser.parseOfficeAsync(fileBuffer, { tempWorkDir: "/tmp" });
+          trimmedText = cleanExtractedText(pptText);
+          isDirectText = true;
+        } catch (pptxErr: any) {
+          throw new Error(`Gagal mengekstrak teks dari berkas PowerPoint (.pptx): ${pptxErr.message || pptxErr}`);
+        }
+      } else if (ext === "pdf" || mimeType === "application/pdf") {
+        // PDF is natively supported by Gemini via inlineData. Perfect for retaining context structure!
+        contentsPayload = [
+          {
+            inlineData: {
+              data: base64Data,
+              mimeType: "application/pdf"
+            }
+          },
+          "Berikut adalah berkas PDF berisi materi pembelajaran penting yang diunggah. Tolong baca isi dokumen ini, pahami isinya dengan saksama, lalu buat rangkuman komprehensif serta kuis interaktif yang seru dari materi tersebut sesuai dengan instruksi di bawah ini."
+        ];
+      } else {
+        throw new Error(`Format berkas tidak didukung: ${fileName || "unknown"}. Silakan unggah PDF, DOCX, PPTX atau TXT.`);
       }
     }
 
     if (isDirectText) {
+      if (!trimmedText || trimmedText.length < 5) {
+        throw new Error("Isi berkas kosong atau teks yang terekstraksi terlalu pendek.");
+      }
       contentsPayload = [
         `Berikut adalah materi pembelajaran yang perlu dirangkum dan diujikan lewat kuis. Tolong baca dengan seksama dan buat rangkuman interaktif beserta kuis yang seru.
 
@@ -91,19 +135,8 @@ MATERI PEMBELAJARAN:
 ${trimmedText}
 `
       ];
-    } else if (base64Data) {
-      // Send document directly using modern Gemini SDK inlineData
-      contentsPayload = [
-        {
-          inlineData: {
-            data: base64Data,
-            mimeType: mimeType || "application/pdf"
-          }
-        },
-        "Berikut adalah berkas materi pembelajaran penting yang diunggah. Tolong baca isi dokumen ini, ekstrak seluruh teks isinya secara utuh, lalu buat rangkuman komprehensif serta kuis interaktif yang seru dari materi tersebut sesuai dengan instruksi sistem di bawah ini."
-      ];
-    } else {
-      return res.status(400).json({ error: "Silakan masukkan teks atau unggah berkas PDF/Word/PPT/TXT." });
+    } else if (contentsPayload.length === 0) {
+      return res.status(400).json({ error: "Silakan masukkan teks atau unggah berkas PDF/Word/PPTX/TXT." });
     }
 
     const response = await ai.models.generateContent({
